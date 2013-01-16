@@ -18,4 +18,10 @@ $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
     return $twig;
 }));
 
+$app->register(new Propel\Silex\PropelServiceProvider(), array(
+    // 'propel.path'        => __DIR__.'/path/to/Propel.php',
+    'propel.config_file' => __DIR__.'/../config/radio-hipster-conf.php',
+    'propel.model_path'  => __DIR__.'/../src',
+));
+
 return $app;

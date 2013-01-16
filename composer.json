@@ -5,7 +5,9 @@
         "silex/silex": "1.0.*",
         "twig/twig": ">=1.8,<2.0-dev",
         "symfony/console": "2.1.*",
-        "symfony/class-loader": "2.1.*"
+        "symfony/class-loader": "2.1.*",
+        "propel/propel1": "1.6.*@dev",
+        "propel/propel-service-provider": "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {
