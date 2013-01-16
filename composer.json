@@ -1,6 +1,14 @@
 {
+    "name": "mdarse/radio-hipster",
     "require": {
-        "silex/silex": "1.0.*"
+        "php": ">=5.3.3",
+        "silex/silex": "1.0.*",
+        "twig/twig": ">=1.8,<2.0-dev",
+        "symfony/console": "2.1.*",
+        "symfony/class-loader": "2.1.*"
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": { "": "src/" }
+    }
 }
