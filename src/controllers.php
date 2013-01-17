@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use RH\Model\Song;
 
 $app->get('/', function () use ($app) {
     
@@ -19,9 +20,32 @@ $app->get('/', function () use ($app) {
 ->bind('homepage')
 ;
 
-$app->get('/upload', function () use ($app) {
-    //TODO
+$app->match('/upload', function (Request $request) use ($app) {
+    $song = new Song();
+
+    \RH\Model\SongQuery::create()
+        ->filterById(14, \Criteria::GREATER_THAN)
+        ->find()
+        ->delete();
+
+    $form = $app['form.factory']->createBuilder('form', $song)
+        ->add('name')
+        ->add('file', 'file')
+        ->getForm();
+
+    if ('POST' == $request->getMethod()) {
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            $song->save();
+
+            return $app['twig']->render('uploaded.html', array('song' => $song));
+        }
+    }
+
+    return $app['twig']->render('upload.html', array('form' => $form->createView()));
 })
+->method('GET|POST')
 ->bind('upload')
 ;
 

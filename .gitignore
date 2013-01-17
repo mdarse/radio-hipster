@@ -1,6 +1,9 @@
 /vendor/
 composer.phar
+
+/web/uploads/
+
+# Propel
 build.properties
 runtime-conf.xml
 config/radio-hipster-conf.php
-
