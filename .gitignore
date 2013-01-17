@@ -2,3 +2,5 @@
 composer.phar
 build.properties
 runtime-conf.xml
+config/radio-hipster-conf.php
+
