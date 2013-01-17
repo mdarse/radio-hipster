@@ -1,5 +1,5 @@
 {
-    "hash": "5ab428ab83cd568f7d2bfc46b818f4ce",
+    "hash": "a3a859745d4f8c425519068e96554d93",
     "packages": [
         {
             "name": "phing/phing",
@@ -145,19 +145,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/propelorm/Propel",
-                "reference": "bea81ddf3b0e11173cc26b2681ea8a1923795a64"
+                "reference": "edee8827243021cccd1215687d2c6ec359840143"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/propelorm/Propel/archive/bea81ddf3b0e11173cc26b2681ea8a1923795a64.zip",
-                "reference": "bea81ddf3b0e11173cc26b2681ea8a1923795a64",
+                "url": "https://github.com/propelorm/Propel/archive/edee8827243021cccd1215687d2c6ec359840143.zip",
+                "reference": "edee8827243021cccd1215687d2c6ec359840143",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.4",
                 "phing/phing": "2.4.12"
             },
-            "time": "2013-01-14 18:59:28",
+            "time": "2013-01-16 20:48:31",
             "bin": [
                 "generator/bin/propel-gen",
                 "generator/bin/propel-gen.bat"
@@ -691,6 +691,7 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
+        "propel/propel1": 20,
         "propel/propel-service-provider": 20
     }
 }
