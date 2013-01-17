@@ -15,7 +15,7 @@ CREATE TABLE `song`
     `name` VARCHAR(255) NOT NULL,
     `path` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
 -- playitem
@@ -29,8 +29,11 @@ CREATE TABLE `playitem`
     `order` INTEGER NOT NULL,
     `song_id` INTEGER NOT NULL,
     PRIMARY KEY (`id`),
-    INDEX `playitem_FI_1` (`song_id`)
-) ENGINE=MyISAM;
+    INDEX `playitem_FI_1` (`song_id`),
+    CONSTRAINT `playitem_FK_1`
+        FOREIGN KEY (`song_id`)
+        REFERENCES `song` (`id`)
+) ENGINE=InnoDB;
 
 # This restores the fkey checks, after having unset them earlier
 SET FOREIGN_KEY_CHECKS = 1;
