@@ -13,10 +13,17 @@ $app->get('/', function () use ($app) {
 ;
 
 $app->get('/upload', function () use ($app) {
-    // TODO
+    //TODO
 })
 ->bind('upload')
 ;
+
+$app->get('/search', function () use ($app) {
+    return $app['twig']->render('search.html', array());
+})
+->bind('search')
+;
+
 
 $app->error(function (\Exception $e, $code) use ($app) {
     if ($app['debug']) {
