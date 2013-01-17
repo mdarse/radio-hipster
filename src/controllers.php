@@ -12,6 +12,12 @@ $app->get('/', function () use ($app) {
 ->bind('homepage')
 ;
 
+$app->get('/upload', function () use ($app) {
+    // TODO
+})
+->bind('upload')
+;
+
 $app->error(function (\Exception $e, $code) use ($app) {
     if ($app['debug']) {
         return;
