@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database name="radio-hipster" defaultIdMethod="native" namespace="RH\Model">
-    <table name="user" phpName="User">
+    <table name="song" phpName="Song">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="email" type="varchar" size="255" required="true" />
+        <column name="name" type="varchar" size="255" required="true" />
+        <column name="path" type="varchar" size="255" required="true" />
+    </table>
+    <table name="playitem" phpName="PlayItem">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="order" type="integer" required="true"/>
+        <column name="song_id" type="integer" required="true" />
+        <foreign-key foreignTable="song">
+            <reference local="song_id" foreign="id"/>
+        </foreign-key>
     </table>
 </database>
