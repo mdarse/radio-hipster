@@ -18,11 +18,40 @@ $app->get('/upload', function () use ($app) {
 ->bind('upload')
 ;
 
-$app->get('/search', function () use ($app) {
-    return $app['twig']->render('search.html', array());
+
+$app->match('/search', function (Request $request) use ($app) {
+    $data = array(
+        'name' => 'Your name',
+        'email' => 'Your email',
+    );
+
+    $form = $app['form.factory']->createBuilder('form', $data)
+        ->add('name')
+        ->add('email')
+        ->add('gender', 'choice', array(
+            'choices' => array(1 => 'male', 2 => 'female'),
+            'expanded' => true,
+        ))
+        ->getForm();
+    
+    if ('POST' == $request->getMethod()) {
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+
+            // do something with the data
+
+            // redirect somewhere
+            return $app->redirect('...');
+        }
+    }
+    
+    // display the form
+    return $app['twig']->render('search.html', array('form' => $form->createView﻿﻿()));
 })
-->bind('search')
-;
+->method('GET|POST')
+->bind('search');
 
 
 $app->error(function (\Exception $e, $code) use ($app) {
