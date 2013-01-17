@@ -1,6 +1,6 @@
 <?php
 
-use Silex\Application;
+use RH\Application;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;

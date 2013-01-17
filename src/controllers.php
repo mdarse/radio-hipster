@@ -19,39 +19,58 @@ $app->get('/upload', function () use ($app) {
 ;
 
 
+//This part of the controller is used to controle the search module
 $app->match('/search', function (Request $request) use ($app) {
-    $data = array(
-        'name' => 'Your name',
-        'email' => 'Your email',
-    );
+                    $form = $app['form.factory']->createBuilder('form')
+                            ->add('search')
+                            ->getForm();
 
-    $form = $app['form.factory']->createBuilder('form', $data)
-        ->add('name')
-        ->add('email')
-        ->add('gender', 'choice', array(
-            'choices' => array(1 => 'male', 2 => 'female'),
-            'expanded' => true,
-        ))
-        ->getForm();
-    
-    if ('POST' == $request->getMethod()) {
-        $form->bind($request);
 
-        if ($form->isValid()) {
-            $data = $form->getData();
 
-            // do something with the data
+                    //Il there are something in the POST
+                    if ('POST' == $request->getMethod()) {
+                        $form->bind($request);
+                        $data = $form->getData();
 
-            // redirect somewhere
-            return $app->redirect('...');
-        }
-    }
-    
-    // display the form
-    return $app['twig']->render('search.html', array('form' => $form->createView﻿﻿()));
-})
-->method('GET|POST')
-->bind('search');
+
+                        $songs = RH\Model\SongQuery::create()
+                                ->filterByName('%' . $data['search'] . '%')
+                                ->find();
+
+                        // Display the form and the result
+                        return $app['twig']->render('search.html', array(
+                                    'form' => $form->createView(),
+                                    'songs' => $songs
+                                ));
+                    }
+
+
+                    // Display the form
+                    return $app['twig']->render('search.html', array(
+                                'form' => $form->createView()
+                            ));
+                })
+        ->method('GET|POST')
+        ->bind('search')
+;
+                
+$app->get('/insert/{id}', function ($id) use ($app) {
+
+                    $item = new \RH\Model\PlayItem();
+                    $item->setOrder(time());
+
+                    $song = RH\Model\SongQuery::create()->findPk($id);
+
+                    $item->setSong($song);
+                    $item->save();
+
+                    //return $app->redirect($app['url_generator']->generate('search'));
+                    return $app->redirect($app->path('search'));
+                    
+                })
+        ->bind('insert')
+;
+
 
 
 $app->error(function (\Exception $e, $code) use ($app) {
