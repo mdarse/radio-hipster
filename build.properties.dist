@@ -7,6 +7,7 @@ propel.namespace.autoPackage = true
 propel.packageObjectModel    = true
 
 propel.database = mysql
+propel.mysql.tableType = InnoDB
 
 # Connection parameters
 propel.database.url = mysql:unix=/tmp/mysql.sock;dbname=radio-hipster
