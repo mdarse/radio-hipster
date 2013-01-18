@@ -4,25 +4,30 @@
 
 {% block content %}
     <div class="row-fluid">
-        <div class="span12">
+        <div class="span12 span">
             Player
         </div>
     </div>
     <div class="row-fluid">
-        <div class="span8">
-            Content
-        </div>
-        <div class="span4">
+        <section class="span8 span">
+            <aside>
+                    {{ include('searchForm.twig') }}
+            </aside>
+            <section>
+                section
+            </section>
+        </section>
+        <aside class="span4 span">
             <h1>Playlist</h1>
-            {% if songs is defined %}
+            {% if songsPlaylist is defined %}
              <ul id='playlist'>
-                 {% for item in songs %}
+                 {% for item in songsPlaylist %}
                  <li>{{ item.getSong.name }}</li>
                  {% else %}
                  <li>The Radio is empty! Please choose a song! Quick!</li>
                  {% endfor %}
              </ul>
          {% endif %}
-        </div>
+        </aside>
     </div>
 {% endblock %}

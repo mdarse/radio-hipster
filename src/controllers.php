@@ -7,14 +7,43 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use RH\Model\Song;
 
-$app->get('/', function () use ($app) {
-    
-    $songs = \RH\Model\PlayItemQuery::create()
-            ->find();
 
+$app->match('/', function (Request $request) use ($app) {
     
-    return $app['twig']->render('index.html', array(
+    //Playlist gestion
+    $songsPlaylist = \RH\Model\PlayItemQuery::create()
+            ->find();
+    
+    
+    //TODO : CHANGE!! Copy/Past search controller to change. 
+    
+    //Search gestion
+    $form = $app['form.factory']->createBuilder('form')
+            ->add('search')
+            ->getForm();
+    
+    $form->bind($request);
+    $data = $form->getData();
+
+        
+    //Il there are something in the GET
+    if ('GET' == $request->getMethod() && $data['search'] != null) {
+        $songs = RH\Model\SongQuery::create()
+                ->filterByName('%' . $data['search'] . '%')
+                ->find();
+
+        
+        // Display the form and the result
+        return $app['twig']->render('index.html', array(
+                    'songsPlaylist' => $songsPlaylist,
+                    'form' => $form->createView(),
                     'songs' => $songs
+                ));
+    }
+
+    return $app['twig']->render('index.html', array(
+                    'songsPlaylist' => $songsPlaylist,
+                    'form' => $form->createView()
                 ));
 })
 ->bind('homepage')
@@ -55,19 +84,18 @@ $app->match('/search', function (Request $request) use ($app) {
     $form = $app['form.factory']->createBuilder('form')
             ->add('search')
             ->getForm();
+    
+    $form->bind($request);
+    $data = $form->getData();
 
-
-
-    //Il there are something in the POST
-    if ('POST' == $request->getMethod()) {
-        $form->bind($request);
-        $data = $form->getData();
-
-
+        
+    //Il there are something in the GET
+    if ('GET' == $request->getMethod() && $data['search'] != null) {
         $songs = RH\Model\SongQuery::create()
                 ->filterByName('%' . $data['search'] . '%')
                 ->find();
 
+        
         // Display the form and the result
         return $app['twig']->render('search.html', array(
                     'form' => $form->createView(),
@@ -102,7 +130,7 @@ $app->get('/insert/{id}', function ($id) use ($app) {
     $item->save();
 
     //return $app->redirect($app['url_generator']->generate('search'));
-    return $app->redirect($app->path('search'));
+    return $app->redirect($app->path('homepage'));
 })
 ->bind('insert')
 ;

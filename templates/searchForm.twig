@@ -1,0 +1,22 @@
+<form action="#" method="get">
+    <fieldset>
+        <legend>Search a song</legend>
+        
+        {{ form_row(form.search, { 'attr': { 'placeHolder': 'What do you listen to?' } }) }}
+
+        
+         <input type="submit" name="submit" class="btn" />
+
+
+         {% if songs is defined %}
+             <ul id='songs'>
+                 {% for item in songs %}
+                 <li>{{ item.name }} <a href="{{ path('insert', { id: item.id }) }}" class="addSong">Add</a></li>
+                 {% else %}
+                 <li>Sorry, there are no result for this search. Maybe can you upload a song?</li>
+                 {% endfor %}
+             </ul>
+         {% endif %}
+
+    </fieldset>
+</form>
