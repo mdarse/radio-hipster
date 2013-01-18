@@ -6,6 +6,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use RH\Model\Song;
+use RH\Model\SongQuery;
+use RH\Model\PlayItem;
+use RH\Model\PlayItemQuery;
 
 //This part of the controller is used to controle the homepage module. It contain a search module.
 $app->match('/', function (Request $request) use ($app) {
@@ -49,6 +52,22 @@ $app->match('/', function (Request $request) use ($app) {
 ->bind('homepage')
 ;
 
+$app->get('/playlist', function (Request $request) use ($app) {
+    $songs = SongQuery::create()
+        ->usePlayItemQuery()
+            ->orderByOrder()
+        ->endUse()
+        ->find();
+
+    $songs = array_map(function ($song) use ($app) {
+        $webPath = $app['request']->getUriForPath($song->getWebPath());
+        return $song->setPath($webPath)->toArray();
+    }, (array) $songs);
+
+    return $app->json($songs);
+})
+->bind('playlist')
+;
 
 //This part of the controller is used to controle the upload module
 $app->match('/upload', function (Request $request) use ($app) {
