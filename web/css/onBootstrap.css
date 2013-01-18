@@ -9,3 +9,11 @@
     padding: 10px;
     background-color: gainsboro;
 }
+
+#formSearch input{
+    width: 460px;
+}
+
+.alert{
+    margin-top: 10px;
+}

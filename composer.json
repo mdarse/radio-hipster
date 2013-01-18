@@ -12,7 +12,8 @@
         "symfony/twig-bridge": "2.1.*",
         "symfony/validator": "2.1.*",
         "propel/propel1": "1.6.*@dev",
-        "propel/propel-service-provider": "dev-master"
+        "propel/propel-service-provider": "dev-master",
+        "nass600/get-id3": " dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {

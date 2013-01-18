@@ -30,4 +30,6 @@ $app->register(new Propel\Silex\PropelServiceProvider(), array(
     'propel.model_path'  => __DIR__.'/../src',
 ));
 
+$app->register(new Silex\Provider\SessionServiceProvider());
+
 return $app;

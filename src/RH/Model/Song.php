@@ -20,6 +20,7 @@ use RH\Model\om\BaseSong;
 class Song extends BaseSong
 {
     protected $file;
+    private $isExtractingMetadata = false;
 
     public function getFile()
     {
@@ -35,22 +36,97 @@ class Song extends BaseSong
 
     public function preSave(PropelPDO $con = null)
     {
+        if($this->isExtractingMetadata)
+            return true;
         if (null !== $this->file) {
+
             // generate unique name
             $filename = sha1(uniqid(mt_rand(), true));
             $this->setPath($filename.'.'.$this->file->guessExtension());
+
+
 
             // Do we need to access path with getPath() ?
 
             // DEBUG
             // $this->path = $this->file->getClientOriginalName();
-            
+
             return true;
         }
+        
+    }
+    
+    public function extractID3() {
+        
+        if ($this->isExtractingMetadata) return;
+        
+        $this->isExtractingMetadata = true;
+        
+        $getID3 = new \getID3();
+        $filesInfos = $getID3->analyze($this->getAbsolutePath());
+        
+        //Time Gestion
+        if(isset($filesInfos['playtime_string']))
+         $this->setTime($filesInfos['playtime_string']);
+        
+        if(isset($filesInfos['tags']['id3v2'])){ //TODO : Change. It can change.
+            
+            //Year Gestion
+            $this->setYear($filesInfos['tags']['id3v2']['year'][0]);
+            
+            //If there is a new artiste, we create a new album
+            $newArtist = false;
+            
+            //Artiste gestion
+            $nameArtiste = $filesInfos['tags']['id3v2']['artist'][0];
+            $arrayArt = ArtisteQuery::create()->findByName($nameArtiste);
+            if (count($arrayArt) == 0)
+            {
+                $artiste = new Artiste();
+                $artiste->setName($nameArtiste);
+                $artiste->save();
+                $newArtist = true;
+            }
+            else
+            {
+                $artiste = $arrayArt[0];
+            }
+            
+            $this->setArtiste($artiste);
+            
+            
+            
+            //Album gestion
+            $nameAlbum = $filesInfos['tags']['id3v2']['album'][0];
+            $array = AlbumQuery::create()->findByName($nameAlbum);
+            if (count($array) == 0 || $newArtist)
+            {
+                $album = new Album();
+                $album->setName($nameAlbum);
+                $album->save();
+            }
+            else
+            {
+                $album = $array[0];
+            }
+            $this->setAlbum($album);
+
+            
+            
+        }
+
+
+        $this->save();
+        
+        $this->isExtractingMetadata = FALSE;
+
     }
 
     public function postSave(PropelPDO $con = null)
     {
+        
+        if($this->isExtractingMetadata) return;
+        
         if (null === $this->file) {
             return;
         }

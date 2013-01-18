@@ -3,31 +3,34 @@
 {% block title 'Home' %}
 
 {% block content %}
-    <div class="row-fluid">
-        <div class="span12 span">
-            Player
-        </div>
+<div class="row-fluid">
+    <div class="span12 span">
+        Player
     </div>
-    <div class="row-fluid">
-        <section class="span8 span">
-            <aside>
-                    {{ include('searchForm.twig') }}
-            </aside>
-            <section>
-                section
-            </section>
-        </section>
-        <aside class="span4 span">
-            <h1>Playlist</h1>
-            {% if songsPlaylist is defined %}
-             <ul id='playlist'>
-                 {% for item in songsPlaylist %}
-                 <li>{{ item.getSong.name }}</li>
-                 {% else %}
-                 <li>The Radio is empty! Please choose a song! Quick!</li>
-                 {% endfor %}
-             </ul>
-         {% endif %}
+</div>
+<div class="row-fluid">
+    <section class="span8 span">
+        <aside>
+            {{ include('searchForm.twig') }}
         </aside>
-    </div>
+        <section>
+            <a href="#uploadModal" role="button" class="btn btn-large" data-toggle="modal">Upload a song</a>
+            {{ render(url('upload')) }}
+                
+
+        </section>
+    </section>
+    <aside class="span4 span">
+        <h1>Playlist</h1>
+        {% if songsPlaylist is defined %}
+        <ul id='playlist'>
+            {% for item in songsPlaylist %}
+            <li>{{ item.song.name }}</li>
+            {% else %}
+            <li>The Radio is empty! Please choose a song! Quick!</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </aside>
+</div>
 {% endblock %}

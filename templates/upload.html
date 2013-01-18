@@ -1,14 +1,9 @@
 {% extends "layout.html" %}
 
+{% block title 'Upload Song' %}
+
 {% block content %}
     <h1>Upload</h1>
 
-    <form action="{{ path('upload') }}" method="post" {{ form_enctype(form) }}>
-        {{ form_errors(form) }}
-        {{ form_row(form.name) }}
-        {{ form_row(form.file) }}
-        {{ form_rest(form) }}
-
-        <input type="submit" name="submit">
-    </form>
+    {{ include('uploadForm.twig') }}
 {% endblock %}

@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database name="radio-hipster" defaultIdMethod="native" namespace="RH\Model">
+     <table name="artiste" phpName="Artiste">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="varchar" size="255" required="true" />
+    </table>
+    <table name="album" phpName="Album">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="varchar" size="255" required="true" />
+    </table>
     <table name="song" phpName="Song">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="varchar" size="255" required="true" />
         <column name="path" type="varchar" size="255" required="true" />
+        <column name="year" type="integer" required="false" />
+        <column name="time" type="varchar" size="255" required="false" />
+        <column name="artiste_id" type="integer" required="false" />
+        <column name="album_id" type="integer" required="false" />
+        <foreign-key foreignTable="artiste">
+            <reference local="artiste_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="album">
+            <reference local="album_id" foreign="id"/>
+        </foreign-key>
     </table>
     <table name="playitem" phpName="PlayItem">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>

@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use RH\Model\Song;
 
-
+//This part of the controller is used to controle the homepage module. It contain a search module.
 $app->match('/', function (Request $request) use ($app) {
     
     //Playlist gestion
@@ -19,7 +19,7 @@ $app->match('/', function (Request $request) use ($app) {
     
     //Search gestion
     $form = $app['form.factory']->createBuilder('form')
-            ->add('search')
+            ->add('search', 'search')
             ->getForm();
     
     $form->bind($request);
@@ -49,13 +49,15 @@ $app->match('/', function (Request $request) use ($app) {
 ->bind('homepage')
 ;
 
+
+//This part of the controller is used to controle the upload module
 $app->match('/upload', function (Request $request) use ($app) {
     $song = new Song();
 
-    \RH\Model\SongQuery::create()
-        ->filterById(14, \Criteria::GREATER_THAN)
-        ->find()
-        ->delete();
+//    \RH\Model\SongQuery::create()
+//        ->filterById(14, \Criteria::GREATER_THAN)
+//        ->find()
+//        ->delete();
 
     $form = $app['form.factory']->createBuilder('form', $song)
         ->add('name')
@@ -67,12 +69,17 @@ $app->match('/upload', function (Request $request) use ($app) {
 
         if ($form->isValid()) {
             $song->save();
+            $song->extractID3();
 
-            return $app['twig']->render('uploaded.html', array('song' => $song));
+            
+            $app['session']->setFlash('successUpload','Your song has been uploaded');
+            
+            return $app->redirect($app->path('homepage'));
+            //return $app['twig']->render('uploaded.html', array('song' => $song));
         }
     }
 
-    return $app['twig']->render('upload.html', array('form' => $form->createView()));
+    return $app['twig']->render('uploadForm.twig', array('form' => $form->createView()));
 })
 ->method('GET|POST')
 ->bind('upload')
@@ -82,7 +89,7 @@ $app->match('/upload', function (Request $request) use ($app) {
 //This part of the controller is used to controle the search module
 $app->match('/search', function (Request $request) use ($app) {
     $form = $app['form.factory']->createBuilder('form')
-            ->add('search')
+            ->add('search', 'search')
             ->getForm();
     
     $form->bind($request);
@@ -128,6 +135,8 @@ $app->get('/insert/{id}', function ($id) use ($app) {
 
     $item->setSong($song);
     $item->save();
+    
+    $app['session']->setFlash('successAdd','Your song <strong>' . $song->getName() . '</strong> has been added at the radio playlist! Enjoy :-) !');
 
     //return $app->redirect($app['url_generator']->generate('search'));
     return $app->redirect($app->path('homepage'));
@@ -136,7 +145,7 @@ $app->get('/insert/{id}', function ($id) use ($app) {
 ;
 
 
-
+//This part of the controller is used to controle the error in the web site
 $app->error(function (\Exception $e, $code) use ($app) {
     if ($app['debug']) {
         return;

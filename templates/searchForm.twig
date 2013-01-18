@@ -1,17 +1,17 @@
-<form action="#" method="get">
+<form action="#" method="get" class="form-search" id="formSearch">
     <fieldset>
-        <legend>Search a song</legend>
-        
-        {{ form_row(form.search, { 'attr': { 'placeHolder': 'What do you listen to?' } }) }}
+        {{ form_widget(form.search, { 'attr': { 'placeHolder': 'What do you listen to?' , 'class' : 'search-query input-xlarge' }}) }}
 
+        {{ form_rest(form) }}
         
-         <input type="submit" name="submit" class="btn" />
+         
 
+         <button class="btn"><i class="icon-search"></i> Search</button>
 
          {% if songs is defined %}
              <ul id='songs'>
                  {% for item in songs %}
-                 <li>{{ item.name }} <a href="{{ path('insert', { id: item.id }) }}" class="addSong">Add</a></li>
+                 <li>{{ item.name }} by {{ item.artiste.name|default('Unknow Artist') }} in {{ item.album.name |default('Unknow Album') }} ({{ item.time | default('??:??') }} ) <a href="{{ path('insert', { id: item.id }) }}" class="addSong">Add</a></li>
                  {% else %}
                  <li>Sorry, there are no result for this search. Maybe can you upload a song?</li>
                  {% endfor %}

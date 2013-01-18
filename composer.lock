@@ -1,6 +1,48 @@
 {
-    "hash": "3949365a0e95fcfa5c7960351dfbd470",
+    "hash": "460f6554cbff4a1adf0bba103d7a17fa",
     "packages": [
+        {
+            "name": "nass600/get-id3",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nass600/getID3",
+                "reference": "d760ea21c58dc4abadf4f57fced3584ee00297e8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/nass600/getID3/archive/d760ea21c58dc4abadf4f57fced3584ee00297e8.zip",
+                "reference": "d760ea21c58dc4abadf4f57fced3584ee00297e8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "time": "2012-10-08 21:35:42",
+            "type": "php-library",
+            "autoload": {
+                "files": [
+                    "getid3/getid3.php",
+                    "getid3/write.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GNU"
+            ],
+            "authors": [
+                {
+                    "name": "James Heinrich"
+                }
+            ],
+            "description": "PHP library for handling audio/video files metadata",
+            "homepage": "https://github.com/nass600/getID3",
+            "keywords": [
+                "metadata",
+                "id3",
+                "mp3"
+            ]
+        },
         {
             "name": "phing/phing",
             "version": "2.4.12",
