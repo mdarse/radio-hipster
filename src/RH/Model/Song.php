@@ -74,25 +74,25 @@ class Song extends BaseSong
             //Year Gestion
             $this->setYear($filesInfos['tags']['id3v2']['year'][0]);
             
-            //If there is a new artiste, we create a new album
+            //If there is a new artist, we create a new album
             $newArtist = false;
             
-            //Artiste gestion
-            $nameArtiste = $filesInfos['tags']['id3v2']['artist'][0];
-            $arrayArt = ArtisteQuery::create()->findByName($nameArtiste);
+            //Artist gestion
+            $nameArtist = $filesInfos['tags']['id3v2']['artist'][0];
+            $arrayArt = ArtistQuery::create()->findByName($nameArtist);
             if (count($arrayArt) == 0)
             {
-                $artiste = new Artiste();
-                $artiste->setName($nameArtiste);
-                $artiste->save();
+                $artist = new Artist();
+                $artist->setName($nameArtist);
+                $artist->save();
                 $newArtist = true;
             }
             else
             {
-                $artiste = $arrayArt[0];
+                $artist = $arrayArt[0];
             }
             
-            $this->setArtiste($artiste);
+            $this->setArtist($artist);
             
             
             

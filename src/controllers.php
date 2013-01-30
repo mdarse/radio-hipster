@@ -49,14 +49,14 @@ $app->match('/', function (Request $request) use ($app) {
         
         
         
-        $artists = RH\Model\ArtisteQuery::create()
+        $artists = RH\Model\ArtistQuery::create()
                 ->filterByName('%' . $data['search'] . '%')
                 ->find();
         
         $songsByArtists = array();
         foreach ($artists as $artist) {
             $songsByArtists[] = RH\Model\SongQuery::create()
-                                ->filterByArtiste($artist)
+                                ->filterByArtist($artist)
                                 ->find();
         }
         

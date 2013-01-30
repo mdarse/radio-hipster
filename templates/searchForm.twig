@@ -13,7 +13,7 @@
          <h3>Songs</h3>
              <ul id='songs'>
                  {% for item in songs %}
-                 <li>{{ item.name }} by {{ item.artiste.name|default('Unknow Artist') }} in {{ item.album.name |default('Unknow Album') }} ({{ item.time | default('??:??') }} ) <a href="{{ path('insert', { id: item.id }) }}" class="addSong">Add</a></li>
+                 <li>{{ item.name }} by {{ item.artist.name|default('Unknow Artist') }} in {{ item.album.name |default('Unknow Album') }} ({{ item.time | default('??:??') }} ) <a href="{{ path('insert', { id: item.id }) }}" class="addSong">Add</a></li>
                  {% else %}
                  <li>Sorry, there are no result for this title search. Maybe can you upload a song with this title?</li>
                  {% endfor %}
@@ -26,7 +26,7 @@
              <ul id='songsOnAlbum'>
                 {% for itemArray in songsOnAlbum %}
                     {% for item in itemArray %}
-                        <li>{{ item.name }} by {{ item.artiste.name|default('Unknow Artist') }} in {{ item.album.name |default('Unknow Album') }} ({{ item.time | default('??:??') }} ) <a href="{{ path('insert', { id: item.id }) }}" class="addSong">Add</a></li>
+                        <li>{{ item.name }} by {{ item.artist.name|default('Unknow Artist') }} in {{ item.album.name |default('Unknow Album') }} ({{ item.time | default('??:??') }} ) <a href="{{ path('insert', { id: item.id }) }}" class="addSong">Add</a></li>
                     {% else %}
                         <li>Sorry, there are no result for this album search. Maybe can you upload a song from this album?</li>
                     {% endfor %}
@@ -40,7 +40,7 @@
              <ul id='songsByArtists'>
                 {% for itemArray in songsByArtists %}
                     {% for item in itemArray %}
-                        <li>{{ item.name }} by {{ item.artiste.name|default('Unknow Artist') }} in {{ item.album.name |default('Unknow Album') }} ({{ item.time | default('??:??') }} ) <a href="{{ path('insert', { id: item.id }) }}" class="addSong">Add</a></li>
+                        <li>{{ item.name }} by {{ item.artist.name|default('Unknow Artist') }} in {{ item.album.name |default('Unknow Album') }} ({{ item.time | default('??:??') }} ) <a href="{{ path('insert', { id: item.id }) }}" class="addSong">Add</a></li>
                     {% else %}
                             <li>Sorry, there are no result for this artist search. Maybe can you upload a song from this artist?</li>
                     {% endfor %}
