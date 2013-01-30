@@ -53,7 +53,7 @@ class PlayItemTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Song', 'RH\\Model\\Song', RelationMap::MANY_TO_ONE, array('song_id' => 'id', ), null, null);
+        $this->addRelation('Song', 'RH\\Model\\Song', RelationMap::MANY_TO_ONE, array('song_id' => 'id', ), 'CASCADE', null);
     } // buildRelations()
 
 } // PlayItemTableMap

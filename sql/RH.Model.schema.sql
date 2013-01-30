@@ -71,6 +71,7 @@ CREATE TABLE `playitem`
     CONSTRAINT `playitem_FK_1`
         FOREIGN KEY (`song_id`)
         REFERENCES `song` (`id`)
+        ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 # This restores the fkey checks, after having unset them earlier

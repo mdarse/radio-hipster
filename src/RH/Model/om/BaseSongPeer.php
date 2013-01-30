@@ -11,6 +11,7 @@ use \PropelException;
 use \PropelPDO;
 use RH\Model\AlbumPeer;
 use RH\Model\ArtistePeer;
+use RH\Model\PlayItemPeer;
 use RH\Model\Song;
 use RH\Model\SongPeer;
 use RH\Model\map\SongTableMap;
@@ -401,6 +402,9 @@ abstract class BaseSongPeer
      */
     public static function clearRelatedInstancePool()
     {
+        // Invalidate objects in PlayItemPeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        PlayItemPeer::clearInstancePool();
     }
 
     /**
