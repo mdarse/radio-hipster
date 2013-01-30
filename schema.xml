@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database name="radio-hipster" defaultIdMethod="native" namespace="RH\Model">
-     <table name="artiste" phpName="Artiste">
+     <table name="artist" phpName="Artist">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="varchar" size="255" required="true" />
     </table>
@@ -14,10 +14,11 @@
         <column name="path" type="varchar" size="255" required="true" />
         <column name="year" type="integer" required="false" />
         <column name="time" type="varchar" size="255" required="false" />
-        <column name="artiste_id" type="integer" required="false" />
+        <column name="artist_id" type="integer" required="false" />
+        <column name="listen_count" type="integer" required="true"/>
         <column name="album_id" type="integer" required="false" />
-        <foreign-key foreignTable="artiste">
-            <reference local="artiste_id" foreign="id"/>
+        <foreign-key foreignTable="artist">
+            <reference local="artist_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="album">
             <reference local="album_id" foreign="id"/>

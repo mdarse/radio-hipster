@@ -47,7 +47,8 @@ class SongTableMap extends TableMap
         $this->addColumn('path', 'Path', 'VARCHAR', true, 255, null);
         $this->addColumn('year', 'Year', 'INTEGER', false, null, null);
         $this->addColumn('time', 'Time', 'VARCHAR', false, 255, null);
-        $this->addForeignKey('artiste_id', 'ArtisteId', 'INTEGER', 'artiste', 'id', false, null, null);
+        $this->addForeignKey('artist_id', 'ArtistId', 'INTEGER', 'artist', 'id', false, null, null);
+        $this->addColumn('listen_count', 'ListenCount', 'INTEGER', true, null, null);
         $this->addForeignKey('album_id', 'AlbumId', 'INTEGER', 'album', 'id', false, null, null);
         // validators
     } // initialize()
@@ -57,7 +58,7 @@ class SongTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Artiste', 'RH\\Model\\Artiste', RelationMap::MANY_TO_ONE, array('artiste_id' => 'id', ), null, null);
+        $this->addRelation('Artist', 'RH\\Model\\Artist', RelationMap::MANY_TO_ONE, array('artist_id' => 'id', ), null, null);
         $this->addRelation('Album', 'RH\\Model\\Album', RelationMap::MANY_TO_ONE, array('album_id' => 'id', ), null, null);
         $this->addRelation('PlayItem', 'RH\\Model\\PlayItem', RelationMap::ONE_TO_MANY, array('id' => 'song_id', ), null, null, 'PlayItems');
     } // buildRelations()

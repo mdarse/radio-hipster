@@ -1092,10 +1092,10 @@ abstract class BaseAlbum extends BaseObject implements Persistent
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return PropelObjectCollection|Song[] List of Song objects
      */
-    public function getSongsJoinArtiste($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getSongsJoinArtist($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         $query = SongQuery::create(null, $criteria);
-        $query->joinWith('Artiste', $join_behavior);
+        $query->joinWith('Artist', $join_behavior);
 
         return $this->getSongs($query, $con);
     }

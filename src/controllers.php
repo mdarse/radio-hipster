@@ -36,11 +36,37 @@ $app->match('/', function (Request $request) use ($app) {
                 ->find();
 
         
+       $albums = \RH\Model\AlbumQuery::create()
+                ->filterByName('%' . $data['search'] . '%')
+                ->find();   
+        
+        $songsOnAlbum = array();
+        foreach ($albums as $album) {
+            $songsOnAlbum[] = RH\Model\SongQuery::create()
+                                ->filterByAlbum($album)
+                                ->find();
+        }
+        
+        
+        
+        $artists = RH\Model\ArtisteQuery::create()
+                ->filterByName('%' . $data['search'] . '%')
+                ->find();
+        
+        $songsByArtists = array();
+        foreach ($artists as $artist) {
+            $songsByArtists[] = RH\Model\SongQuery::create()
+                                ->filterByArtiste($artist)
+                                ->find();
+        }
+        
         // Display the form and the result
         return $app['twig']->render('index.html', array(
                     'songsPlaylist' => $songsPlaylist,
                     'form' => $form->createView(),
-                    'songs' => $songs
+                    'songs' => $songs,
+                    'songsOnAlbum' => $songsOnAlbum,
+                    'songsByArtists' => $songsByArtists
                 ));
     }
 
@@ -120,12 +146,14 @@ $app->match('/search', function (Request $request) use ($app) {
         $songs = RH\Model\SongQuery::create()
                 ->filterByName('%' . $data['search'] . '%')
                 ->find();
+        
+        
 
         
         // Display the form and the result
         return $app['twig']->render('search.html', array(
                     'form' => $form->createView(),
-                    'songs' => $songs
+                    'songs' => $songs,
                 ));
     }
 

@@ -15,8 +15,8 @@ use \PropelObjectCollection;
 use \PropelPDO;
 use RH\Model\Album;
 use RH\Model\AlbumQuery;
-use RH\Model\Artiste;
-use RH\Model\ArtisteQuery;
+use RH\Model\Artist;
+use RH\Model\ArtistQuery;
 use RH\Model\PlayItem;
 use RH\Model\PlayItemQuery;
 use RH\Model\Song;
@@ -82,10 +82,16 @@ abstract class BaseSong extends BaseObject implements Persistent
     protected $time;
 
     /**
-     * The value for the artiste_id field.
+     * The value for the artist_id field.
      * @var        int
      */
-    protected $artiste_id;
+    protected $artist_id;
+
+    /**
+     * The value for the listen_count field.
+     * @var        int
+     */
+    protected $listen_count;
 
     /**
      * The value for the album_id field.
@@ -94,9 +100,9 @@ abstract class BaseSong extends BaseObject implements Persistent
     protected $album_id;
 
     /**
-     * @var        Artiste
+     * @var        Artist
      */
-    protected $aArtiste;
+    protected $aArtist;
 
     /**
      * @var        Album
@@ -186,13 +192,23 @@ abstract class BaseSong extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [artiste_id] column value.
+     * Get the [artist_id] column value.
      *
      * @return int
      */
-    public function getArtisteId()
+    public function getArtistId()
     {
-        return $this->artiste_id;
+        return $this->artist_id;
+    }
+
+    /**
+     * Get the [listen_count] column value.
+     *
+     * @return int
+     */
+    public function getListenCount()
+    {
+        return $this->listen_count;
     }
 
     /**
@@ -311,29 +327,50 @@ abstract class BaseSong extends BaseObject implements Persistent
     } // setTime()
 
     /**
-     * Set the value of [artiste_id] column.
+     * Set the value of [artist_id] column.
      *
      * @param int $v new value
      * @return Song The current object (for fluent API support)
      */
-    public function setArtisteId($v)
+    public function setArtistId($v)
     {
         if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
-        if ($this->artiste_id !== $v) {
-            $this->artiste_id = $v;
-            $this->modifiedColumns[] = SongPeer::ARTISTE_ID;
+        if ($this->artist_id !== $v) {
+            $this->artist_id = $v;
+            $this->modifiedColumns[] = SongPeer::ARTIST_ID;
         }
 
-        if ($this->aArtiste !== null && $this->aArtiste->getId() !== $v) {
-            $this->aArtiste = null;
+        if ($this->aArtist !== null && $this->aArtist->getId() !== $v) {
+            $this->aArtist = null;
         }
 
 
         return $this;
-    } // setArtisteId()
+    } // setArtistId()
+
+    /**
+     * Set the value of [listen_count] column.
+     *
+     * @param int $v new value
+     * @return Song The current object (for fluent API support)
+     */
+    public function setListenCount($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->listen_count !== $v) {
+            $this->listen_count = $v;
+            $this->modifiedColumns[] = SongPeer::LISTEN_COUNT;
+        }
+
+
+        return $this;
+    } // setListenCount()
 
     /**
      * Set the value of [album_id] column.
@@ -397,8 +434,9 @@ abstract class BaseSong extends BaseObject implements Persistent
             $this->path = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->year = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
             $this->time = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->artiste_id = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
-            $this->album_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
+            $this->artist_id = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
+            $this->listen_count = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
+            $this->album_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -407,7 +445,7 @@ abstract class BaseSong extends BaseObject implements Persistent
                 $this->ensureConsistency();
             }
             $this->postHydrate($row, $startcol, $rehydrate);
-            return $startcol + 7; // 7 = SongPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = SongPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Song object", $e);
@@ -430,8 +468,8 @@ abstract class BaseSong extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
-        if ($this->aArtiste !== null && $this->artiste_id !== $this->aArtiste->getId()) {
-            $this->aArtiste = null;
+        if ($this->aArtist !== null && $this->artist_id !== $this->aArtist->getId()) {
+            $this->aArtist = null;
         }
         if ($this->aAlbum !== null && $this->album_id !== $this->aAlbum->getId()) {
             $this->aAlbum = null;
@@ -475,7 +513,7 @@ abstract class BaseSong extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aArtiste = null;
+            $this->aArtist = null;
             $this->aAlbum = null;
             $this->collPlayItems = null;
 
@@ -597,11 +635,11 @@ abstract class BaseSong extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aArtiste !== null) {
-                if ($this->aArtiste->isModified() || $this->aArtiste->isNew()) {
-                    $affectedRows += $this->aArtiste->save($con);
+            if ($this->aArtist !== null) {
+                if ($this->aArtist->isModified() || $this->aArtist->isNew()) {
+                    $affectedRows += $this->aArtist->save($con);
                 }
-                $this->setArtiste($this->aArtiste);
+                $this->setArtist($this->aArtist);
             }
 
             if ($this->aAlbum !== null) {
@@ -680,8 +718,11 @@ abstract class BaseSong extends BaseObject implements Persistent
         if ($this->isColumnModified(SongPeer::TIME)) {
             $modifiedColumns[':p' . $index++]  = '`time`';
         }
-        if ($this->isColumnModified(SongPeer::ARTISTE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`artiste_id`';
+        if ($this->isColumnModified(SongPeer::ARTIST_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`artist_id`';
+        }
+        if ($this->isColumnModified(SongPeer::LISTEN_COUNT)) {
+            $modifiedColumns[':p' . $index++]  = '`listen_count`';
         }
         if ($this->isColumnModified(SongPeer::ALBUM_ID)) {
             $modifiedColumns[':p' . $index++]  = '`album_id`';
@@ -712,8 +753,11 @@ abstract class BaseSong extends BaseObject implements Persistent
                     case '`time`':
                         $stmt->bindValue($identifier, $this->time, PDO::PARAM_STR);
                         break;
-                    case '`artiste_id`':
-                        $stmt->bindValue($identifier, $this->artiste_id, PDO::PARAM_INT);
+                    case '`artist_id`':
+                        $stmt->bindValue($identifier, $this->artist_id, PDO::PARAM_INT);
+                        break;
+                    case '`listen_count`':
+                        $stmt->bindValue($identifier, $this->listen_count, PDO::PARAM_INT);
                         break;
                     case '`album_id`':
                         $stmt->bindValue($identifier, $this->album_id, PDO::PARAM_INT);
@@ -817,9 +861,9 @@ abstract class BaseSong extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aArtiste !== null) {
-                if (!$this->aArtiste->validate($columns)) {
-                    $failureMap = array_merge($failureMap, $this->aArtiste->getValidationFailures());
+            if ($this->aArtist !== null) {
+                if (!$this->aArtist->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aArtist->getValidationFailures());
                 }
             }
 
@@ -894,9 +938,12 @@ abstract class BaseSong extends BaseObject implements Persistent
                 return $this->getTime();
                 break;
             case 5:
-                return $this->getArtisteId();
+                return $this->getArtistId();
                 break;
             case 6:
+                return $this->getListenCount();
+                break;
+            case 7:
                 return $this->getAlbumId();
                 break;
             default:
@@ -933,12 +980,13 @@ abstract class BaseSong extends BaseObject implements Persistent
             $keys[2] => $this->getPath(),
             $keys[3] => $this->getYear(),
             $keys[4] => $this->getTime(),
-            $keys[5] => $this->getArtisteId(),
-            $keys[6] => $this->getAlbumId(),
+            $keys[5] => $this->getArtistId(),
+            $keys[6] => $this->getListenCount(),
+            $keys[7] => $this->getAlbumId(),
         );
         if ($includeForeignObjects) {
-            if (null !== $this->aArtiste) {
-                $result['Artiste'] = $this->aArtiste->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            if (null !== $this->aArtist) {
+                $result['Artist'] = $this->aArtist->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aAlbum) {
                 $result['Album'] = $this->aAlbum->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
@@ -996,9 +1044,12 @@ abstract class BaseSong extends BaseObject implements Persistent
                 $this->setTime($value);
                 break;
             case 5:
-                $this->setArtisteId($value);
+                $this->setArtistId($value);
                 break;
             case 6:
+                $this->setListenCount($value);
+                break;
+            case 7:
                 $this->setAlbumId($value);
                 break;
         } // switch()
@@ -1030,8 +1081,9 @@ abstract class BaseSong extends BaseObject implements Persistent
         if (array_key_exists($keys[2], $arr)) $this->setPath($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setYear($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setTime($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setArtisteId($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setAlbumId($arr[$keys[6]]);
+        if (array_key_exists($keys[5], $arr)) $this->setArtistId($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setListenCount($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setAlbumId($arr[$keys[7]]);
     }
 
     /**
@@ -1048,7 +1100,8 @@ abstract class BaseSong extends BaseObject implements Persistent
         if ($this->isColumnModified(SongPeer::PATH)) $criteria->add(SongPeer::PATH, $this->path);
         if ($this->isColumnModified(SongPeer::YEAR)) $criteria->add(SongPeer::YEAR, $this->year);
         if ($this->isColumnModified(SongPeer::TIME)) $criteria->add(SongPeer::TIME, $this->time);
-        if ($this->isColumnModified(SongPeer::ARTISTE_ID)) $criteria->add(SongPeer::ARTISTE_ID, $this->artiste_id);
+        if ($this->isColumnModified(SongPeer::ARTIST_ID)) $criteria->add(SongPeer::ARTIST_ID, $this->artist_id);
+        if ($this->isColumnModified(SongPeer::LISTEN_COUNT)) $criteria->add(SongPeer::LISTEN_COUNT, $this->listen_count);
         if ($this->isColumnModified(SongPeer::ALBUM_ID)) $criteria->add(SongPeer::ALBUM_ID, $this->album_id);
 
         return $criteria;
@@ -1117,7 +1170,8 @@ abstract class BaseSong extends BaseObject implements Persistent
         $copyObj->setPath($this->getPath());
         $copyObj->setYear($this->getYear());
         $copyObj->setTime($this->getTime());
-        $copyObj->setArtisteId($this->getArtisteId());
+        $copyObj->setArtistId($this->getArtistId());
+        $copyObj->setListenCount($this->getListenCount());
         $copyObj->setAlbumId($this->getAlbumId());
 
         if ($deepCopy && !$this->startCopy) {
@@ -1184,24 +1238,24 @@ abstract class BaseSong extends BaseObject implements Persistent
     }
 
     /**
-     * Declares an association between this object and a Artiste object.
+     * Declares an association between this object and a Artist object.
      *
-     * @param             Artiste $v
+     * @param             Artist $v
      * @return Song The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setArtiste(Artiste $v = null)
+    public function setArtist(Artist $v = null)
     {
         if ($v === null) {
-            $this->setArtisteId(NULL);
+            $this->setArtistId(NULL);
         } else {
-            $this->setArtisteId($v->getId());
+            $this->setArtistId($v->getId());
         }
 
-        $this->aArtiste = $v;
+        $this->aArtist = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the Artiste object, it will not be re-added.
+        // If this object has already been added to the Artist object, it will not be re-added.
         if ($v !== null) {
             $v->addSong($this);
         }
@@ -1212,27 +1266,27 @@ abstract class BaseSong extends BaseObject implements Persistent
 
 
     /**
-     * Get the associated Artiste object
+     * Get the associated Artist object
      *
      * @param PropelPDO $con Optional Connection object.
      * @param $doQuery Executes a query to get the object if required
-     * @return Artiste The associated Artiste object.
+     * @return Artist The associated Artist object.
      * @throws PropelException
      */
-    public function getArtiste(PropelPDO $con = null, $doQuery = true)
+    public function getArtist(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aArtiste === null && ($this->artiste_id !== null) && $doQuery) {
-            $this->aArtiste = ArtisteQuery::create()->findPk($this->artiste_id, $con);
+        if ($this->aArtist === null && ($this->artist_id !== null) && $doQuery) {
+            $this->aArtist = ArtistQuery::create()->findPk($this->artist_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aArtiste->addSongs($this);
+                $this->aArtist->addSongs($this);
              */
         }
 
-        return $this->aArtiste;
+        return $this->aArtist;
     }
 
     /**
@@ -1531,7 +1585,8 @@ abstract class BaseSong extends BaseObject implements Persistent
         $this->path = null;
         $this->year = null;
         $this->time = null;
-        $this->artiste_id = null;
+        $this->artist_id = null;
+        $this->listen_count = null;
         $this->album_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
@@ -1560,8 +1615,8 @@ abstract class BaseSong extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->aArtiste instanceof Persistent) {
-              $this->aArtiste->clearAllReferences($deep);
+            if ($this->aArtist instanceof Persistent) {
+              $this->aArtist->clearAllReferences($deep);
             }
             if ($this->aAlbum instanceof Persistent) {
               $this->aAlbum->clearAllReferences($deep);
@@ -1574,7 +1629,7 @@ abstract class BaseSong extends BaseObject implements Persistent
             $this->collPlayItems->clearIterator();
         }
         $this->collPlayItems = null;
-        $this->aArtiste = null;
+        $this->aArtist = null;
         $this->aAlbum = null;
     }
 

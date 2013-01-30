@@ -4,12 +4,12 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ---------------------------------------------------------------------
--- artiste
+-- artist
 -- ---------------------------------------------------------------------
 
-DROP TABLE IF EXISTS `artiste`;
+DROP TABLE IF EXISTS `artist`;
 
-CREATE TABLE `artiste`
+CREATE TABLE `artist`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
@@ -42,14 +42,15 @@ CREATE TABLE `song`
     `path` VARCHAR(255) NOT NULL,
     `year` INTEGER,
     `time` VARCHAR(255),
-    `artiste_id` INTEGER,
+    `artist_id` INTEGER,
+    `listen_count` INTEGER NOT NULL,
     `album_id` INTEGER,
     PRIMARY KEY (`id`),
-    INDEX `song_FI_1` (`artiste_id`),
+    INDEX `song_FI_1` (`artist_id`),
     INDEX `song_FI_2` (`album_id`),
     CONSTRAINT `song_FK_1`
-        FOREIGN KEY (`artiste_id`)
-        REFERENCES `artiste` (`id`),
+        FOREIGN KEY (`artist_id`)
+        REFERENCES `artist` (`id`),
     CONSTRAINT `song_FK_2`
         FOREIGN KEY (`album_id`)
         REFERENCES `album` (`id`)
