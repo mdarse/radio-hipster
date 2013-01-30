@@ -58,7 +58,6 @@ $app->get('/playlist', function (Request $request) use ($app) {
         ->orderByOrder()
         ->find();
 
-    }, (array) $songs);
     $items = array_map(function (PlayItem $playItem) use ($app) {
         $song = $playItem->getSong();
         $songWebPath = $app['request']->getUriForPath($song->getWebPath());
@@ -85,6 +84,13 @@ $app->get('/playlist', function (Request $request) use ($app) {
     return $app->json($items);
 })
 ->bind('playlist')
+;
+
+$app->get('/player', function (Request $request) use ($app) {
+
+    return $app['twig']->render('player.html', array());
+})
+->bind('player')
 ;
 
 //This part of the controller is used to controle the upload module
