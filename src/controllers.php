@@ -53,18 +53,36 @@ $app->match('/', function (Request $request) use ($app) {
 ;
 
 $app->get('/playlist', function (Request $request) use ($app) {
-    $songs = SongQuery::create()
-        ->usePlayItemQuery()
-            ->orderByOrder()
-        ->endUse()
+
+    $items = PlayItemQuery::create()
+        ->orderByOrder()
         ->find();
 
-    $songs = array_map(function ($song) use ($app) {
-        $webPath = $app['request']->getUriForPath($song->getWebPath());
-        return $song->setPath($webPath)->toArray();
     }, (array) $songs);
+    $items = array_map(function (PlayItem $playItem) use ($app) {
+        $song = $playItem->getSong();
+        $songWebPath = $app['request']->getUriForPath($song->getWebPath());
 
-    return $app->json($songs);
+        $attributes = array(
+            'id'             => $playItem->getId(),
+            'order'          => $playItem->getOrder(),
+            'song_id'        => $song->getId(),
+            'song_name'      => $song->getName(),
+            'song_media_url' => $songWebPath
+        );
+        if ($artist = $song->getArtiste()) {
+            $attributes['song_artist_id'] = $artist->getId();
+            $attributes['song_artist']    = $artist->getName();
+        }
+        if ($album = $song->getAlbum()) {
+            $attributes['song_album_id'] = $album->getId();
+            $attributes['song_album']    = $album->getName();
+        }
+
+        return $attributes;
+    }, (array) $items);
+
+    return $app->json($items);
 })
 ->bind('playlist')
 ;
