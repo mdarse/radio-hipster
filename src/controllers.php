@@ -132,42 +132,7 @@ $app->match('/upload', function (Request $request) use ($app) {
 ;
 
 
-//This part of the controller is used to controle the search module
-$app->match('/search', function (Request $request) use ($app) {
-    $form = $app['form.factory']->createBuilder('form')
-            ->add('search', 'search')
-            ->getForm();
-    
-    $form->bind($request);
-    $data = $form->getData();
-
-        
-    //Il there are something in the GET
-    if ('GET' == $request->getMethod() && $data['search'] != null) {
-        $songs = RH\Model\SongQuery::create()
-                ->filterByName('%' . $data['search'] . '%')
-                ->find();
-        
-        
-
-        
-        // Display the form and the result
-        return $app['twig']->render('search.html', array(
-                    'form' => $form->createView(),
-                    'songs' => $songs,
-                ));
-    }
-
-
-    // Display the form
-    return $app['twig']->render('search.html', array(
-                'form' => $form->createView()
-            ));
-})
-->method('GET|POST')
-->bind('search')
-;
-           
+     
 
 
 //This Part of the contoller is used to insert an item in the PlayList
