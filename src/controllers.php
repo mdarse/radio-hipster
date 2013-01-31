@@ -9,6 +9,7 @@ use RH\Model\Song;
 use RH\Model\SongQuery;
 use RH\Model\PlayItem;
 use RH\Model\PlayItemQuery;
+use RH\Playlist;
 
 //This part of the controller is used to controle the homepage module. It contain a search module.
 $app->match('/', function (Request $request) use ($app) {
@@ -79,20 +80,20 @@ $app->match('/', function (Request $request) use ($app) {
 ;
 
 $app->get('/playlist', function (Request $request) use ($app) {
-    $songs = SongQuery::create()
-        ->usePlayItemQuery()
-            ->orderByOrder()
-        ->endUse()
-        ->find();
+    $items = PlayItemQuery::create()->findAllByOrderAsArray();
+    $baseUrl = $request->getSchemeAndHttpHost().$request->getBasePath();
+    $playlist = new Playlist($items, $baseUrl);
 
-    $songs = array_map(function ($song) use ($app) {
-        $webPath = $app['request']->getUriForPath($song->getWebPath());
-        return $song->setPath($webPath)->toArray();
-    }, (array) $songs);
-
-    return $app->json($songs);
+    return $app->json($playlist->toArray());
 })
 ->bind('playlist')
+;
+
+$app->get('/player', function (Request $request) use ($app) {
+
+    return $app['twig']->render('player.html', array());
+})
+->bind('player')
 ;
 
 //This part of the controller is used to controle the upload module

@@ -60,7 +60,7 @@ class SongTableMap extends TableMap
     {
         $this->addRelation('Artist', 'RH\\Model\\Artist', RelationMap::MANY_TO_ONE, array('artist_id' => 'id', ), null, null);
         $this->addRelation('Album', 'RH\\Model\\Album', RelationMap::MANY_TO_ONE, array('album_id' => 'id', ), null, null);
-        $this->addRelation('PlayItem', 'RH\\Model\\PlayItem', RelationMap::ONE_TO_MANY, array('id' => 'song_id', ), null, null, 'PlayItems');
+        $this->addRelation('PlayItem', 'RH\\Model\\PlayItem', RelationMap::ONE_TO_MANY, array('id' => 'song_id', ), 'CASCADE', null, 'PlayItems');
     } // buildRelations()
 
 } // SongTableMap

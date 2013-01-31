@@ -2,11 +2,8 @@
 <html>
     <head>
         <title>{% block title '' %} - Radio Hipster</title>
-        <link href="{{ app.request.basepath }}/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="{{ app.request.basepath }}/css/bootstrap.min.css" rel="stylesheet" media="screen">
         <link href="{{ app.request.basepath }}/css/onBootstrap.css" rel="stylesheet" media="screen">
-        
-        <script src="http://code.jquery.com/jquery-latest.js"></script>
-        <script src="{{ app.request.basepath }}/bootstrap/js/bootstrap.min.js"></script>
     </head>
     <body>
          <div class="container-fluid"> 
@@ -31,5 +28,10 @@
              
             {% block content %}{% endblock %}
         </div>
+
+        {% block javascript %}
+            <script src="{{ app.request.basepath }}/js/lib/jquery.min.js"></script>
+            <script src="{{ app.request.basepath }}/js/lib/bootstrap.min.js"></script>
+        {% endblock %}
     </body>
 </html>

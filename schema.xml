@@ -28,7 +28,7 @@
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="order" type="integer" required="true"/>
         <column name="song_id" type="integer" required="true" />
-        <foreign-key foreignTable="song">
+        <foreign-key foreignTable="song" onDelete="CASCADE">
             <reference local="song_id" foreign="id"/>
         </foreign-key>
     </table>
