@@ -2,6 +2,12 @@
 
 {% block title 'Player' %}
 
+{% block javascript %}
+{{ parent() }}
+<script src="{{ app.request.basepath }}/js/lib/lodash.js"></script>
+<script src="{{ app.request.basepath }}/js/lib/backbone.js"></script>
+{% endblock %}
+
 {% block content %}
 The PLayer!
 {% endblock %}
