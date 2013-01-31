@@ -18,4 +18,5 @@ use RH\Model\om\BaseAlbum;
  */
 class Album extends BaseAlbum
 {
+
 }

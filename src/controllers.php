@@ -7,9 +7,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use RH\Model\Song;
 use RH\Model\SongQuery;
+use RH\Model\ArtistQuery;
 use RH\Model\PlayItem;
 use RH\Model\PlayItemQuery;
 use RH\Playlist;
+
+
+
 
 //This part of the controller is used to controle the homepage module. It contain a search module.
 $app->match('/', function (Request $request) use ($app) {
@@ -32,34 +36,14 @@ $app->match('/', function (Request $request) use ($app) {
         
     //Il there are something in the GET
     if ('GET' == $request->getMethod() && $data['search'] != null) {
-        $songs = RH\Model\SongQuery::create()
-                ->filterByName('%' . $data['search'] . '%')
-                ->find();
 
-        
-       $albums = \RH\Model\AlbumQuery::create()
-                ->filterByName('%' . $data['search'] . '%')
-                ->find();   
-        
-        $songsOnAlbum = array();
-        foreach ($albums as $album) {
-            $songsOnAlbum[] = RH\Model\SongQuery::create()
-                                ->filterByAlbum($album)
-                                ->find();
-        }
-        
-        
-        
-        $artists = RH\Model\ArtistQuery::create()
-                ->filterByName('%' . $data['search'] . '%')
-                ->find();
-        
-        $songsByArtists = array();
-        foreach ($artists as $artist) {
-            $songsByArtists[] = RH\Model\SongQuery::create()
-                                ->filterByArtist($artist)
-                                ->find();
-        }
+        $songs = SongQuery::create()
+                ->findByPattern($data['search']);        
+        $songsOnAlbum = SongQuery::create()
+                ->findByAlbumNamePattern($data['search']);
+        $songsByArtists = SongQuery::create()
+                ->findByArtistNamePattern($data['search']);
+
         
         // Display the form and the result
         return $app['twig']->render('index.html', array(

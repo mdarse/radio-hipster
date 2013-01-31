@@ -3,6 +3,8 @@
 namespace RH\Model;
 
 use RH\Model\om\BaseSongQuery;
+use RH\Model\AlbumQuery;
+use RH\Model\ArtistQuery;
 
 
 /**
@@ -18,4 +20,48 @@ use RH\Model\om\BaseSongQuery;
  */
 class SongQuery extends BaseSongQuery
 {
+    public function filterByPattern($pattern)
+    {
+        return $this->filterByName('%' . $pattern . '%');
+    }
+    
+    public function findByPattern($pattern)
+    {
+        return $this->filterByPattern($pattern)->find();
+    }
+    
+    public function findByAlbumNamePattern($pattern)
+    {
+//          Pourquoi ça marche pas?
+//        $songsFromAlbum = SongQuery::create()
+//                ->useAlbumQuery()
+//                    ->filterByName('%' . $data['search'] . '%')
+//                ->endUse()
+//                ->find();
+        
+        $albums = AlbumQuery::create()
+                ->findByPattern($pattern);
+        
+        $songsOnAlbum = array();
+        foreach ($albums as $album) {
+            $songsOnAlbum[] = $this->filterByAlbum($album)->find();
+        }
+        
+        return $songsOnAlbum;
+    
+    }
+    
+        public function findByArtistNamePattern($pattern)
+    {
+        $albums = ArtistQuery::create()
+                ->findByPattern($pattern);
+        
+        $songsOnAlbum = array();
+        foreach ($albums as $album) {
+            $songsOnAlbum[] = $this->filterByArtist($album)->find();
+        }
+        
+        return $songsOnAlbum;
+    
+    }
 }

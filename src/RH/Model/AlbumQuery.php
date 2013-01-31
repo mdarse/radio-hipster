@@ -18,4 +18,13 @@ use RH\Model\om\BaseAlbumQuery;
  */
 class AlbumQuery extends BaseAlbumQuery
 {
+    public function filterByPattern($pattern)
+    {
+        return $this->filterByName('%' . $pattern . '%');
+    }
+    
+    public function findByPattern($pattern)
+    {
+        return $this->filterByPattern($pattern)->find();
+    }
 }

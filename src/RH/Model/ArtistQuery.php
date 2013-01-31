@@ -18,4 +18,13 @@ use RH\Model\om\BaseArtistQuery;
  */
 class ArtistQuery extends BaseArtistQuery
 {
+    public function filterByPattern($pattern)
+    {
+        return $this->filterByName('%' . $pattern . '%');
+    }
+    
+    public function findByPattern($pattern)
+    {
+        return $this->filterByPattern($pattern)->find();
+    }
 }
