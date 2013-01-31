@@ -18,4 +18,12 @@ use RH\Model\om\BasePlayItemQuery;
  */
 class PlayItemQuery extends BasePlayItemQuery
 {
+    public function findAllByOrderAsArray()
+    {
+        return $this
+            ->orderByOrder()
+            ->find()
+            ->getArrayCopy()
+        ;
+    }
 }

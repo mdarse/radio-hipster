@@ -9,6 +9,7 @@ use RH\Model\Song;
 use RH\Model\SongQuery;
 use RH\Model\PlayItem;
 use RH\Model\PlayItemQuery;
+use RH\Playlist;
 
 //This part of the controller is used to controle the homepage module. It contain a search module.
 $app->match('/', function (Request $request) use ($app) {
@@ -53,35 +54,11 @@ $app->match('/', function (Request $request) use ($app) {
 ;
 
 $app->get('/playlist', function (Request $request) use ($app) {
+    $items = PlayItemQuery::create()->findAllByOrderAsArray();
+    $baseUrl = $request->getSchemeAndHttpHost().$request->getBasePath();
+    $playlist = new Playlist($items, $baseUrl);
 
-    $items = PlayItemQuery::create()
-        ->orderByOrder()
-        ->find();
-
-    $items = array_map(function (PlayItem $playItem) use ($app) {
-        $song = $playItem->getSong();
-        $songWebPath = $app['request']->getUriForPath($song->getWebPath());
-
-        $attributes = array(
-            'id'             => $playItem->getId(),
-            'order'          => $playItem->getOrder(),
-            'song_id'        => $song->getId(),
-            'song_name'      => $song->getName(),
-            'song_media_url' => $songWebPath
-        );
-        if ($artist = $song->getArtiste()) {
-            $attributes['song_artist_id'] = $artist->getId();
-            $attributes['song_artist']    = $artist->getName();
-        }
-        if ($album = $song->getAlbum()) {
-            $attributes['song_album_id'] = $album->getId();
-            $attributes['song_album']    = $album->getName();
-        }
-
-        return $attributes;
-    }, (array) $items);
-
-    return $app->json($items);
+    return $app->json($playlist->toArray());
 })
 ->bind('playlist')
 ;
