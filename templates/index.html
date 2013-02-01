@@ -10,15 +10,14 @@
 </div>
 <div class="row-fluid">
     <section class="span8 span">
-        <aside>
-            {{ include('searchForm.twig') }}
-        </aside>
         <section>
+            {{ include('searchForm.twig') }}
             <a href="#uploadModal" role="button" class="btn btn-large" data-toggle="modal">Upload a song</a>
             {{ render(url('upload')) }}
-                
-
         </section>
+        <aside>
+            {{ include('top.html.twig') }}    
+        </aside>
     </section>
     <aside class="span4 span">
         <h1>Playlist</h1>

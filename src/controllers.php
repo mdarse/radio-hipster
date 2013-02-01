@@ -32,6 +32,14 @@ $app->match('/', function (Request $request) use ($app) {
     
     $form->bind($request);
     $data = $form->getData();
+    
+  
+    $top = SongQuery::create()
+            ->orderByListenCount(Criteria::DESC)
+            ->limit(10)
+            ->find();
+            
+            
 
         
     //Il there are something in the GET
@@ -57,7 +65,8 @@ $app->match('/', function (Request $request) use ($app) {
 
     return $app['twig']->render('index.html', array(
                     'songsPlaylist' => $songsPlaylist,
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
+                    'top' => $top
                 ));
 })
 ->bind('homepage')
@@ -129,6 +138,9 @@ $app->get('/insert/{id}', function ($id) use ($app) {
     $item->setOrder(time());
 
     $song = RH\Model\SongQuery::create()->findPk($id);
+    $song->setListenCount($song->getListenCount()+1);
+    var_dump($song);
+    $song->save();
 
     $item->setSong($song);
     $item->save();
