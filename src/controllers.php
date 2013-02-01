@@ -23,8 +23,6 @@ $app->match('/', function (Request $request) use ($app) {
             ->find();
     
     
-    //TODO : CHANGE!! Copy/Past search controller to change. 
-    
     //Search gestion
     $form = $app['form.factory']->createBuilder('form')
             ->add('search', 'search')
@@ -34,14 +32,13 @@ $app->match('/', function (Request $request) use ($app) {
     $data = $form->getData();
     
   
+    //Top Gestion
     $top = SongQuery::create()
             ->orderByListenCount(Criteria::DESC)
             ->limit(10)
             ->find();
             
-            
 
-        
     //Il there are something in the GET
     if ('GET' == $request->getMethod() && $data['search'] != null) {
 
@@ -57,9 +54,10 @@ $app->match('/', function (Request $request) use ($app) {
         return $app['twig']->render('index.html', array(
                     'songsPlaylist' => $songsPlaylist,
                     'form' => $form->createView(),
+                    'top' => $top,
                     'songs' => $songs,
                     'songsOnAlbum' => $songsOnAlbum,
-                    'songsByArtists' => $songsByArtists
+                    'songsByArtists' => $songsByArtists,
                 ));
     }
 
@@ -139,13 +137,14 @@ $app->get('/insert/{id}', function ($id) use ($app) {
 
     $song = RH\Model\SongQuery::create()->findPk($id);
     $song->setListenCount($song->getListenCount()+1);
-    var_dump($song);
-    $song->save();
+    $song->save();  //<= Ne fonctionne pas
 
     $item->setSong($song);
     $item->save();
+
     
-    $app['session']->setFlash('successAdd','Your song <strong>' . $song->getName() . '</strong> has been added at the radio playlist! Enjoy :-) !');
+    //$app['session']->setFlash('successAdd','Your song <strong>' . $song->getName() . '</strong> has been added at the radio playlist! Enjoy :-) !');
+
 
     //return $app->redirect($app['url_generator']->generate('search'));
     return $app->redirect($app->path('homepage'));
