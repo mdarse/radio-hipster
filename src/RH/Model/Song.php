@@ -54,6 +54,8 @@ class Song extends BaseSong
             return true;
         }
         
+        return parent::preSave();
+        
     }
     
     public function extractID3() {
