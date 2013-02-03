@@ -40,26 +40,26 @@ $app->match('/', function (Request $request) use ($app) {
             
 
     //Il there are something in the GET
-    if ('GET' == $request->getMethod() && $data['search'] != null) {
-
-        $songs = SongQuery::create()
-                ->findByPattern($data['search']);        
-        $songsOnAlbum = SongQuery::create()
-                ->findByAlbumNamePattern($data['search']);
-        $songsByArtists = SongQuery::create()
-                ->findByArtistNamePattern($data['search']);
-
-        
-        // Display the form and the result
-        return $app['twig']->render('index.html', array(
-                    'songsPlaylist' => $songsPlaylist,
-                    'form' => $form->createView(),
-                    'top' => $top,
-                    'songs' => $songs,
-                    'songsOnAlbum' => $songsOnAlbum,
-                    'songsByArtists' => $songsByArtists,
-                ));
-    }
+//    if ('GET' == $request->getMethod() && $data['search'] != null) {
+//
+//        $songs = SongQuery::create()
+//                ->findByPattern($data['search']);        
+//        $songsOnAlbum = SongQuery::create()
+//                ->findByAlbumNamePattern($data['search']);
+//        $songsByArtists = SongQuery::create()
+//                ->findByArtistNamePattern($data['search']);
+//
+//        
+//        // Display the form and the result
+//        return $app['twig']->render('index.html', array(
+//                    'songsPlaylist' => $songsPlaylist,
+//                    'form' => $form->createView(),
+//                    'top' => $top,
+//                    'songs' => $songs,
+//                    'songsOnAlbum' => $songsOnAlbum,
+//                    'songsByArtists' => $songsByArtists,
+//                ));
+//    }
 
     return $app['twig']->render('index.html', array(
                     'songsPlaylist' => $songsPlaylist,
@@ -69,6 +69,41 @@ $app->match('/', function (Request $request) use ($app) {
 })
 ->bind('homepage')
 ;
+
+//This part of the controller is used to controle the search module with ajax method
+$app->match('/search', function (Request $request) use ($app){
+
+    $form = $app['form.factory']->createBuilder('form')
+            ->add('search', 'search')
+            ->getForm();
+    
+    $form->bind($request);
+    $data = $form->getData();
+    
+
+    
+    if ('GET' == $request->getMethod() && $data['search'] != null) {
+        $songs = SongQuery::create()
+                ->findByPattern($data['search']);        
+        $songsOnAlbum = SongQuery::create()
+                ->findByAlbumNamePattern($data['search']);
+        $songsByArtists = SongQuery::create()
+                ->findByArtistNamePattern($data['search']);
+        
+        return $app['twig']->render('resultSearch.html.twig', array(
+                'songs' => $songs,
+                'songsOnAlbum' => $songsOnAlbum,
+                'songsByArtists' => $songsByArtists,
+            ));
+        
+    }
+    
+    return $app['twig']->render('resultSearch.html.twig', array());
+})
+->method('GET|POST')
+->bind('search')
+;
+
 
 $app->get('/playlist', function (Request $request) use ($app) {
     $items = PlayItemQuery::create()->findAllByOrderAsArray();
