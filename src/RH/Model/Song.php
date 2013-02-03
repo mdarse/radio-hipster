@@ -2,6 +2,7 @@
 
 namespace RH\Model;
 
+use \BasePeer;
 use \PropelPDO;
 use RH\Model\om\BaseSong;
 
@@ -32,6 +33,18 @@ class Song extends BaseSong
         $this->file = $file;
 
         return $this;
+    }
+
+    public function toArray($keyType = BasePeer::TYPE_FIELDNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
+    {
+        $attributes = parent::toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, $includeForeignObjects);
+        if ($artist = $this->getArtist()) {
+            $attributes['artist'] = $artist->getName();
+        }
+        if ($album = $this->getAlbum()) {
+            $attributes['album'] = $album->getName();
+        }
+        return $attributes;
     }
 
     public function preSave(PropelPDO $con = null)

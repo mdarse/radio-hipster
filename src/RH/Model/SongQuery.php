@@ -24,6 +24,22 @@ class SongQuery extends BaseSongQuery
     {
         return $this->filterByName('%' . $pattern . '%');
     }
+
+    public function findByPatternInLocations($pattern, $locations)
+    {
+        $songs = in_array('song', $locations)
+            ? SongQuery::create()->findByPattern($pattern)->getArrayCopy()
+            : array();
+        $artistSongs = in_array('artist', $locations)
+            ? SongQuery::create()->findByArtistNamePattern($pattern)
+            : array();
+        $albumSongs = in_array('album', $locations)
+            ? SongQuery::create()->findByAlbumNamePattern($pattern)
+            : array();
+
+        return $songs;
+        return array_merge($songs, $artistSongs, $albumSongs);
+    }
     
     public function findByPattern($pattern)
     {

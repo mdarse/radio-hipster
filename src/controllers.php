@@ -157,7 +157,23 @@ $app->match('/upload', function (Request $request) use ($app) {
 ->bind('upload')
 ;
 
+$app->match('/search', function (Request $request) use ($app) {
+    $query = $request->query->get('q');
+    $in = $request->query->get('in', 'song|artist|album');
+    $locations = explode('|', $in);
+    // Whitelist locations
+    $locations = array_intersect($locations, array('song', 'artist', 'album'));
 
+    $songs = SongQuery::create()->findByPatternInLocations($query, $locations);
+    $songs = array_map(function(Song $song) {
+        return $song->toArray();
+    }, $songs);
+
+    return $app->json($songs);
+})
+->method('GET')
+->bind('search')
+;
      
 
 
