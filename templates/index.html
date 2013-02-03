@@ -2,10 +2,18 @@
 
 {% block title 'Home' %}
 
+{% block javascript %}
+{{ parent() }}
+<script src="{{ app.request.basepath }}/audiojs/audio.min.js"></script>
+<script src="{{ app.request.basepath }}/js/lib/lodash.js"></script>
+<script src="{{ app.request.basepath }}/js/lib/backbone.js"></script>
+<script src="{{ app.request.basepath }}/js/app.js"></script>
+{% endblock %}
+
 {% block content %}
 <div class="row-fluid">
     <div class="span12 span">
-        Player
+        <audio autoplay></audio>
     </div>
 </div>
 <div class="row-fluid">
