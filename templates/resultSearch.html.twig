@@ -1,0 +1,42 @@
+<div id="resultSearch">
+
+    {% if songs is defined %}
+        <h3>Songs</h3>
+        <ul id='songs'>
+            {% for item in songs %}
+            <li>{{ item.name }} by {{ item.artist.name|default('Unknow Artist') }} in {{ item.album.name |default('Unknow Album') }} ({{ item.time | default('??:??') }} ) <a href="{{ path('insert', { id: item.id }) }}" class="addSong">Add</a></li>
+            {% else %}
+            <li>Sorry, there are no result for this title search. Maybe can you upload a song with this title?</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+
+    {% if songsOnAlbum is defined %}
+        <h3>Songs on the album</h3>
+        <ul id='songsOnAlbum'>
+           {% for itemArray in songsOnAlbum %}
+               {% for item in itemArray %}
+                   <li>{{ item.name }} by {{ item.artist.name|default('Unknow Artist') }} in {{ item.album.name |default('Unknow Album') }} ({{ item.time | default('??:??') }} ) <a href="{{ path('insert', { id: item.id }) }}" class="addSong">Add</a></li>
+               {% else %}
+                   <li>Sorry, there are no result for this album search. Maybe can you upload a song from this album?</li>
+               {% endfor %}
+           {% endfor %}
+        </ul>
+    {% endif %}
+
+
+    {% if songsByArtists is defined %}
+        <h3>Songs by the artists</h3>
+        <ul id='songsByArtists'>
+           {% for itemArray in songsByArtists %}
+               {% for item in itemArray %}
+                   <li>{{ item.name }} by {{ item.artist.name|default('Unknow Artist') }} in {{ item.album.name |default('Unknow Album') }} ({{ item.time | default('??:??') }} ) <a href="{{ path('insert', { id: item.id }) }}" class="addSong">Add</a></li>
+               {% else %}
+                       <li>Sorry, there are no result for this artist search. Maybe can you upload a song from this artist?</li>
+               {% endfor %}
+           {% endfor %}
+        </ul>
+    {% endif %}
+    
+</div>
