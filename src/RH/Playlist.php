@@ -41,4 +41,23 @@ class Playlist
 
         return $attributes;
     }
+    
+    public static function shift()
+    {
+        //This function will change when we will implements the historiq
+        //We will have to shift all playItem in the negative and keep playItem between -1 and -10.
+        //Less than -10 have to be delete.
+        $playItem = new PlayItem();
+        $playItem = Model\PlayItemQuery::create()
+                ->filterByOrder(0, \Criteria::GREATER_THAN)
+                ->orderBy('order')
+                ->findOne();
+        if($playItem != null)
+        {
+            $playItem->setOrder(-1);
+            $playItem->save();
+
+            $song = $playItem->getSong();
+        }
+    }
 }
