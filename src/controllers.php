@@ -93,35 +93,20 @@ $app->get('/player', function (Request $request) use ($app) {
 //This part of the controller is used to controle the upload module
 $app->match('/upload', function (Request $request) use ($app) {
     $song = new Song();
+    $form = $app['form.factory']->create(new UploadType(), $song);
+    $form->bind($request);
+    if ($form->isValid()) {
+        $song->save();
+        $song->extractID3();
 
-//    \RH\Model\SongQuery::create()
-//        ->filterById(14, \Criteria::GREATER_THAN)
-//        ->find()
-//        ->delete();
+        return $app->json($song->toArray());
 
-    $form = $app['form.factory']->createBuilder('form', $song)
-        ->add('name')
-        ->add('file', 'file')
-        ->getForm();
-
-    if ('POST' == $request->getMethod()) {
-        $form->bind($request);
-
-        if ($form->isValid()) {
-            $song->save();
-            $song->extractID3();
-
-            
-            $app['session']->setFlash('successUpload','Your song has been uploaded');
-            
-            return $app->redirect($app->path('homepage'));
-            //return $app['twig']->render('uploaded.html', array('song' => $song));
-        }
+        // $app['session']->getFlashBag()->add('success','Your song has been uploaded');
+        return new Response('{ "status": "success" }', 201);
     }
-
-    return $app['twig']->render('uploadForm.twig', array('form' => $form->createView()));
+    return new Response('{ "status": "error" }', 400);
 })
-->method('GET|POST')
+->method('POST')
 ->bind('upload')
 ;
 
