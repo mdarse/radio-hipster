@@ -125,7 +125,7 @@ $app->match('/songs', function (Request $request) use ($app) {
     return $app->json($songs);
 })
 ->method('GET')
-->bind('search')
+->bind('songs')
 ;
      
 
