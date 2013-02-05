@@ -157,7 +157,7 @@ $app->match('/upload', function (Request $request) use ($app) {
 ->bind('upload')
 ;
 
-$app->match('/search', function (Request $request) use ($app) {
+$app->match('/songs', function (Request $request) use ($app) {
     $query = $request->query->get('q');
     $in = $request->query->get('in', 'song|artist|album');
     $locations = explode('|', $in);
