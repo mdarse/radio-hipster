@@ -1,5 +1,6 @@
 <form class="form-search" id="formSearch">
     <fieldset>
+        <!-- <input type="search" id="form_search" name="form[search]" required="required" placeholder="What do you listen to?" class="search-query input-xlarge"> -->
         {{ form_widget(form.search, { 'attr': { 'placeHolder': 'What do you listen to?' , 'class' : 'search-query input-xlarge' }}) }}
 
         {{ form_rest(form) }}

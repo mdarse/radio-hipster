@@ -11,61 +11,30 @@ use RH\Model\ArtistQuery;
 use RH\Model\PlayItem;
 use RH\Model\PlayItemQuery;
 use RH\Playlist;
+use RH\UploadType;
 
-
-
-
-//This part of the controller is used to controle the homepage module. It contain a search module.
+// Homepage with search & upload forms (+ playlist + top songs)
 $app->match('/', function (Request $request) use ($app) {
-    
-    //Playlist gestion
-    $songsPlaylist = \RH\Model\PlayItemQuery::create()
-            ->find();
-    
-    
-    //Search gestion
+    // Playlist items
+    $playlist = PlayItemQuery::create()->find();
+    // Search form
     $form = $app['form.factory']->createBuilder('form')
             ->add('search', 'search')
             ->getForm();
-    
-    $form->bind($request);
-    $data = $form->getData();
-    
-  
-    //Top Gestion
-    $top = SongQuery::create()
-            ->orderByListenCount(Criteria::DESC)
-            ->limit(10)
-            ->find();
-            
-
-    //Il there are something in the GET
-//    if ('GET' == $request->getMethod() && $data['search'] != null) {
-//
-//        $songs = SongQuery::create()
-//                ->findByPattern($data['search']);        
-//        $songsOnAlbum = SongQuery::create()
-//                ->findByAlbumNamePattern($data['search']);
-//        $songsByArtists = SongQuery::create()
-//                ->findByArtistNamePattern($data['search']);
-//
-//        
-//        // Display the form and the result
-//        return $app['twig']->render('index.html', array(
-//                    'songsPlaylist' => $songsPlaylist,
-//                    'form' => $form->createView(),
-//                    'top' => $top,
-//                    'songs' => $songs,
-//                    'songsOnAlbum' => $songsOnAlbum,
-//                    'songsByArtists' => $songsByArtists,
-//                ));
-//    }
+    // Top songs
+    $topSongs = SongQuery::create()
+        ->orderByListenCount(Criteria::DESC)
+        ->limit(10)
+        ->find();
+    // Upload form (in modal window)
+    $uploadForm = $app['form.factory']->create(new UploadType());
 
     return $app['twig']->render('index.html', array(
-                    'songsPlaylist' => $songsPlaylist,
-                    'form' => $form->createView(),
-                    'top' => $top
-                ));
+        'songsPlaylist' => $playlist,
+        'searchForm'    => $form->createView(),
+        'uploadForm'    => $uploadForm->createView(),
+        'topSongs'      => $topSongs
+    ));
 })
 ->bind('homepage')
 ;
@@ -116,7 +85,6 @@ $app->get('/playlist', function (Request $request) use ($app) {
 ;
 
 $app->get('/player', function (Request $request) use ($app) {
-
     return $app['twig']->render('player.html', array());
 })
 ->bind('player')

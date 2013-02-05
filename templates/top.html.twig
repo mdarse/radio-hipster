@@ -1,8 +1,8 @@
-{% if top is defined %}
-<h3>Top {{ top.count }}</h3>
+{% if topSongs is defined %}
+<h3>Top {{ topSongs.count }}</h3>
     <ul id='topSongs'>
-        {% for item in top %}
-            <li><strong>{{ item.name }}</strong> <small>by {{ item.artist.name|default('Unknow Artist') }} in {{ item.album.name |default('Unknow Album') }}</small></li>
+        {% for song in topSongs %}
+            <li><strong>{{ song.name }}</strong> <small>by {{ song.artist.name|default('Unknow Artist') }} in {{ song.album.name |default('Unknow Album') }}</small></li>
         {% endfor %}
     </ul>
 {% endif %}

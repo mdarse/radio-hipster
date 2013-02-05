@@ -19,9 +19,9 @@
 <div class="row-fluid">
     <section class="span8 span">
         <section>
-            {{ include('searchForm.twig') }}
+            {{ include('searchForm.twig', { form: searchForm }) }}
             <a href="#uploadModal" role="button" class="btn btn-large" data-toggle="modal">Upload a song</a>
-            {{ render(url('upload')) }}
+            {{ include('uploadForm.twig', { form: uploadForm }) }}
         </section>
         <aside>
             {{ include('top.html.twig') }}
@@ -39,6 +39,4 @@
         </ul> -->
     </aside>
 </div>
-
-
 {% endblock %}
