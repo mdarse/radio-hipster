@@ -84,12 +84,6 @@ $app->get('/playlist', function (Request $request) use ($app) {
 ->bind('playlist')
 ;
 
-$app->get('/player', function (Request $request) use ($app) {
-    return $app['twig']->render('player.html', array());
-})
-->bind('player')
-;
-
 //This part of the controller is used to controle the upload module
 $app->match('/upload', function (Request $request) use ($app) {
     $song = new Song();
