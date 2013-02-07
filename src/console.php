@@ -14,7 +14,55 @@ $console->register( 'shift' )
   ->setCode(
     function(InputInterface $input, OutputInterface $output) use ($app)
     {
-        //\RH\Playlist::shift();
+
+//      This boucle is used to test if the script works
+//      $test = true;
+//        while ($test) {
+
+      $contenu_array = null;
+      $contenu_array = file('time');
+        
+        if (!$fp = fopen("time","w+")) {
+            print('Probleme');
+            exit;
+        }
+        
+            
+        
+        if ($contenu_array != null)
+        {
+            $tab = explode('/', $contenu_array[0]);
+            $times = explode(':', $tab[1]);
+            $minutes = $times[0];
+            $secondes = $times[1];
+            $timstampToNotPass = $tab[0] + $secondes + 60*$minutes;
+
+            
+            if($timstampToNotPass> time())
+            {
+                fputs($fp, $tab[0] . '/' . $tab[1]);
+            }
+            else
+            {
+                print('On change');
+                RH\Playlist::shift();
+                $song = \RH\Playlist::getSong();
+                if($song == null)
+                {
+                    print('fin');
+                    exit;
+                }
+                fputs($fp, time() . '/' . $song->getTime());
+            }
+        }
+        else
+        {
+            print('On met');
+            $song = \RH\Playlist::getSong();
+            fputs($fp, time() . '/' . $song->getTime());
+        }
+        fclose($fp);
+//        }
     }
   );
   
