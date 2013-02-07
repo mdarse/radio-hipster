@@ -20,9 +20,9 @@ $console->register( 'shift' )
 //        while ($test) {
 
       $contenu_array = null;
-      $contenu_array = file('time');
+      $contenu_array = file('timeDir/time');
         
-        if (!$fp = fopen("time","w+")) {
+        if (!$fp = fopen("timeDir/time","w+")) {
             print('Probleme');
             exit;
         }
