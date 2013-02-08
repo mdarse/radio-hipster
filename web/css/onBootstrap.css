@@ -17,3 +17,7 @@
 .alert{
     margin-top: 10px;
 }
+
+.search-match {
+    font-weight: bold;
+}

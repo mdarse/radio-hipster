@@ -18,8 +18,17 @@
 </div>
 <div class="row-fluid">
     <section class="span8 span">
-        <section>
-            {{ include('searchForm.twig', { form: searchForm }) }}
+        <section id="search-view">
+            <input type="search" id="search-field" placeholder="Search for songs, artists or albums" class="input-xlarge">
+            <script type="text/x-underscore" id="search-result-template">
+                <li data-id="<%= id %>">
+                    <%= hightlight(name) %> /
+                    <%= album ? hightlight(album) : "Album inconnu" %> /
+                    <%= artist ? hightlight(artist) : "Artiste inconnu" %>
+                    <button class="add btn btn-mini" type="button">Add to playlist</button>
+                </li>
+            </script>
+            <ul id="search-results"></ul>
             <a href="#uploadModal" role="button" class="btn btn-large" data-toggle="modal">Upload a song</a>
             {{ include('uploadForm.twig', { form: uploadForm }) }}
         </section>
