@@ -29,14 +29,24 @@
                 </div>
             </div>
             <script type="text/x-underscore" id="search-result-template">
-                <li data-id="<%= id %>">
-                    <%= hightlight(name) %> /
-                    <%= album ? hightlight(album) : "Album inconnu" %> /
-                    <%= artist ? hightlight(artist) : "Artiste inconnu" %>
-                    <button class="add btn btn-mini" type="button">Add to playlist</button>
-                </li>
+                <div class="song-row" data-id="<%= id %>">
+                    <div class="img-container">
+                        <img src="{{ app.request.basepath }}/img/disc.png">
+                    </div>
+                    <div class="metadata">
+                        <span class="title"><%= hightlight(name) %></span>
+                        <div class="meta-inner">
+                            <span class="album meta-text"><%= artist ? hightlight(artist) : "Artiste inconnu" %></span>
+                            &nbsp;//&nbsp;
+                            <span class="album meta-text"><%= album ? hightlight(album) : "Album inconnu" %></span>
+                        </div>
+                    </div>
+                    <div class="row-actions">
+                        <a href="/index.php/insert/<%= id %>" class="add btn btn-mini" type="button">Add to playlist</a>
+                    </div>
+                </div>
             </script>
-            <ul id="search-results"></ul>
+            <div class="search-results" id="search-results"></div>
             <a href="#uploadModal" role="button" class="btn btn-large" data-toggle="modal">Upload a song</a>
             {{ include('uploadForm.twig', { form: upload_form }) }}
         </section>
