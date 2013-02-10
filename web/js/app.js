@@ -21,7 +21,7 @@ var SongCollection = Backbone.Collection.extend({
   url: '/index.php/songs',
   query: function(search) {
     this.fetch({
-      data: { q: search }
+      data: search
     });
   }
 });
@@ -51,25 +51,34 @@ var PlaylistView = Backbone.View.extend({
 
 var SearchView = Backbone.View.extend({
   events: {
-    'input #search-field': 'search',
-    'click .add': 'onSongAdd'
+    'input #search-field': 'onInput',
+    'click .add': 'onSongAdd',
+    'click .search-in': 'onPlaceChange'
   },
   initialize: function() {
     _.bindAll(this);
     this.listenTo(this.collection, 'reset', this.render);
-    this.searchField = this.$('#search-field');
     this.searchResults = this.$('#search-results');
     var template = this.$('#search-result-template').html();
     this.template = _.template(template);
   },
-  search: function() {
-    var search = this.searchField.val();
-    if (!search) {
+  onInput: function(e) {
+    this.search = $(e.target).val();
+    this.regexp = new RegExp(RegExp.escape(this.search), 'gi');
+    this.refresh();
+  },
+  onPlaceChange: function(e) {
+    this.searchIn = $(e.target).attr('data-search-in');
+    this.refresh();
+  },
+  refresh: function() {
+    if (!this.search) {
       this.collection.reset();
       return;
     }
-    this.collection.query(search);
-    this.regexp = new RegExp(RegExp.escape(search), 'gi');
+    var data = { q: this.search };
+    if (this.searchIn) data['in'] = this.searchIn;
+    this.collection.query(data);
   },
   hightlight: function(string) {
     return string.replace(this.regexp, '<span class="search-match">$&</span>');

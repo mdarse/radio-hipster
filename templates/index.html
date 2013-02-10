@@ -19,7 +19,15 @@
 <div class="row-fluid">
     <section class="span8 span">
         <section id="search-view">
-            <input type="search" id="search-field" placeholder="Search for songs, artists or albums" class="input-xlarge">
+            <div class="search-form form-inline">
+                <input type="search" id="search-field" placeholder="Search for songs, artists or albums" class="input-xlarge">
+                <div class="btn-group" data-toggle="buttons-radio">
+                    <button class="btn active search-in" data-search-in="song|artist|album">Any</button>
+                    <button class="btn search-in" data-search-in="song">Title</button>
+                    <button class="btn search-in" data-search-in="album">Album</button>
+                    <button class="btn search-in" data-search-in="artist">Artist</button>
+                </div>
+            </div>
             <script type="text/x-underscore" id="search-result-template">
                 <li data-id="<%= id %>">
                     <%= hightlight(name) %> /
