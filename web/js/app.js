@@ -94,7 +94,33 @@ var SearchView = Backbone.View.extend({
   onSongAdd: function(e) {
     var id = $(e.target).attr('data-id');
     var song = this.collection.get(id);
-    Backbone.Events.trigger('song:queue', song);
+    Backbone.Events.trigger('song:play', song);
+  }
+});
+
+var PlayerView = Backbone.View.extend({
+  initialize: function() {
+    this.player = audiojs.create(this.el, {
+      trackEnded: this.onTrackEnded,
+      loadError: this.onLoadError
+    });
+    Backbone.Events.on('song:play', function(song) {
+      this.playSong(song);
+    }, this);
+  },
+  onTrackEnded: function() {
+    Backbone.Events.trigger('player:ended', this);
+  },
+  onLoadError: function() {
+    Backbone.Events.trigger('player:error', this);
+  },
+  loadSong: function(song, play) {
+    var url = song.get('song_media_url');
+    this.player.load(url);
+    if (play) this.player.play();
+  },
+  playSong: function(song) {
+    this.loadSong(song, true);
   }
 });
 
@@ -103,37 +129,21 @@ $(document).ready(function() {
   playlist.fetch();
   playlist.on('reset', function() {
     var song = playlist.first();
-    loadSong(song);
+    playerView.loadSong(song);
   }, this);
 
-  function loadSong(song, play) {
-    var url = song.get('song_media_url');
-    console.log('Loading', song.get('song_name'), url);
-    player.load(url);
-    if (play) player.play();
-  }
-
-  var playerEl = $('#player').get(0);
-  var player = audiojs.create(playerEl, {
-    trackEnded: function() {
-      console.log('Track ended');
-      var next = playlist.next();
-      loadSong(next, true);
-    // },
-    // loadError: function() {
-    //   console.log('Load error');
-    }
+  var playerView = new PlayerView({
+    el: '#player'
   });
+
   var playlistView = new PlaylistView({
     el: '#playlist',
     collection: playlist
   });
 
-  Backbone.Events.on('song:play', function(song) {
-    loadSong(song, true);
-  });
+
   Backbone.Events.on('song:queue', function(song) {
-    loadSong(song, true);
+    console.log('Queue song', song.name);
   });
 
   var songs = new SongCollection();
