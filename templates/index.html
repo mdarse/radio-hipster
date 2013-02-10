@@ -30,7 +30,7 @@
             </script>
             <ul id="search-results"></ul>
             <a href="#uploadModal" role="button" class="btn btn-large" data-toggle="modal">Upload a song</a>
-            {{ include('uploadForm.twig', { form: uploadForm }) }}
+            {{ include('uploadForm.twig', { form: upload_form }) }}
         </section>
         <aside>
             {{ include('top.html.twig') }}
@@ -39,13 +39,6 @@
     <aside class="span4 span">
         <h1>Playlist</h1>
         <ol id='playlist'></ol>
-        <!-- <ul id='playlist'>
-            {% for item in songsPlaylist %}
-            <li>{{ item.song.name }}</li>
-            {% else %}
-            <li>The playlist is empty, add a song !</li>
-            {% endfor %}
-        </ul> -->
     </aside>
 </div>
 {% endblock %}

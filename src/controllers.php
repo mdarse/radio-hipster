@@ -15,12 +15,6 @@ use RH\UploadType;
 
 // Homepage with search & upload forms (+ playlist + top songs)
 $app->match('/', function (Request $request) use ($app) {
-    // Playlist items
-    $playlist = PlayItemQuery::create()->find();
-    // Search form
-    $form = $app['form.factory']->createBuilder('form')
-            ->add('search', 'search')
-            ->getForm();
     // Top songs
     $topSongs = SongQuery::create()
         ->orderByListenCount(Criteria::DESC)
@@ -30,49 +24,12 @@ $app->match('/', function (Request $request) use ($app) {
     $uploadForm = $app['form.factory']->create(new UploadType());
 
     return $app['twig']->render('index.html', array(
-        'songsPlaylist' => $playlist,
-        'searchForm'    => $form->createView(),
-        'uploadForm'    => $uploadForm->createView(),
-        'topSongs'      => $topSongs
+        'upload_form'    => $uploadForm->createView(),
+        'top_songs'      => $topSongs
     ));
 })
 ->bind('homepage')
 ;
-
-//This part of the controller is used to controle the search module with ajax method
-$app->match('/search', function (Request $request) use ($app){
-
-    $form = $app['form.factory']->createBuilder('form')
-            ->add('search', 'search')
-            ->getForm();
-    
-    $form->bind($request);
-    $data = $form->getData();
-    
-
-    
-    if ('GET' == $request->getMethod() && $data['search'] != null) {
-        $songs = SongQuery::create()
-                ->findByPattern($data['search']);        
-        $songsOnAlbum = SongQuery::create()
-                ->findByAlbumNamePattern($data['search']);
-        $songsByArtists = SongQuery::create()
-                ->findByArtistNamePattern($data['search']);
-        
-        return $app['twig']->render('resultSearch.html.twig', array(
-                'songs' => $songs,
-                'songsOnAlbum' => $songsOnAlbum,
-                'songsByArtists' => $songsByArtists,
-            ));
-        
-    }
-    
-    return $app['twig']->render('resultSearch.html.twig', array());
-})
-->method('GET|POST')
-->bind('search')
-;
-
 
 $app->get('/playlist', function (Request $request) use ($app) {
     $items = PlayItemQuery::create()->findAllByOrderAsArray();
