@@ -73,6 +73,12 @@ $app->match('/songs', function (Request $request) use ($app) {
         return $song->toArray();
     }, $songs);
 
+    if (count($songs) === 0) {
+        return new Response('[]', 200, array(
+            'Content-Type' => 'text/javascript'
+        ));
+    }
+
     return $app->json($songs);
 })
 ->method('GET')
