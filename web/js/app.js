@@ -6,14 +6,33 @@ RegExp.escape = function(s) {
 var Playlist = Backbone.Collection.extend({
   url: '/index.php/playlist',
   comparator: 'order',
+  polling: false,
+  pollingInterval: 10,
   initialize: function() {
     this.on('reset', function() {
       this.currentItem = this.first();
     }, this);
+    _.bindAll(this, 'executePolling', 'onFetch');
+    Backbone.Events.on('song:queue', this.executePolling);
   },
   next: function() {
     var index = this.indexOf(this.currentItem);
     return this.currentItem = this.at(index + 1);
+  },
+  startPolling: function() {
+    this.polling = true;
+    this.executePolling();
+  },
+  stopPolling: function() {
+    this.polling = false;
+  },
+  executePolling: function() {
+    this.fetch({ update: true, success: this.onFetch });
+  },
+  onFetch: function() {
+    if (this.polling) {
+      setTimeout(this.executePolling, this.pollingInterval * 1000);
+    }
   }
 });
 
@@ -36,6 +55,7 @@ var Song = Backbone.Model.extend({
     $.ajax(options);
   }
 });
+
 var SongCollection = Backbone.Collection.extend({
   model: Song,
   url: '/index.php/songs',
@@ -51,15 +71,12 @@ var PlaylistView = Backbone.View.extend({
     'click li': 'onItemClick'
   },
   initialize: function() {
-    this.listenTo(this.collection, 'reset', this.render);
-    // TODO refresh playlist from server when song queued
-    // Backbone.Events.on('song:queue', function(song) {
-    //   console.log('Queue song', song);
-    // });
+    this.listenTo(this.collection, 'all', this.render);
   },
   render: function() {
     this.$el.empty();
     this.collection.each(function(item) {
+      if (item.get('order') < 0) return;
       this.$el.append(this.template(item.toJSON()));
     }, this);
     return this;
@@ -71,7 +88,6 @@ var PlaylistView = Backbone.View.extend({
     Backbone.Events.trigger('song:play', song);
   }
 });
-
 
 var SearchView = Backbone.View.extend({
   events: {
@@ -153,18 +169,18 @@ var PlayerView = Backbone.View.extend({
 $(document).ready(function() {
   var playlist = new Playlist();
   playlist.fetch();
+  playlist.startPolling();
   playlist.on('reset', function() {
     var song = playlist.first();
     playerView.loadSong(song);
   }, this);
-
-  var playerView = new PlayerView({
-    el: '#player'
-  });
-
   var playlistView = new PlaylistView({
     el: '#playlist',
     collection: playlist
+  });
+
+  var playerView = new PlayerView({
+    el: '#player'
   });
 
   var songs = new SongCollection();
