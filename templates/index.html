@@ -29,7 +29,7 @@
                 </div>
             </div>
             <script type="text/x-underscore" id="search-result-template">
-                <div class="song-row" data-id="<%= id %>">
+                <div class="song-row">
                     <div class="img-container">
                         <img src="{{ app.request.basepath }}/img/disc.png">
                     </div>
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                     <div class="row-actions">
-                        <a href="/index.php/insert/<%= id %>" class="add btn btn-mini" type="button">Add to playlist</a>
+                        <a href="/index.php/insert/<%= id %>" class="add btn btn-mini" type="button" data-id="<%= id %>">Add to playlist</a>
                     </div>
                 </div>
             </script>

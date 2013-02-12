@@ -17,7 +17,27 @@ var Playlist = Backbone.Collection.extend({
   }
 });
 
+var Song = Backbone.Model.extend({
+  queue: function() {
+    var success = function(resp) {
+      this.trigger('queued', this, resp, options);
+    };
+    var error = function(xhr) {
+      this.trigger('error', this, xhr, options);
+    };
+    var options = {
+      type: 'POST',
+      dataType: 'json',
+      url: '/index.php/insert/' + this.id,
+      context: this,
+      success: success,
+      error: error
+    };
+    $.ajax(options);
+  }
+});
 var SongCollection = Backbone.Collection.extend({
+  model: Song,
   url: '/index.php/songs',
   query: function(search) {
     this.fetch({
@@ -32,6 +52,10 @@ var PlaylistView = Backbone.View.extend({
   },
   initialize: function() {
     this.listenTo(this.collection, 'reset', this.render);
+    // TODO refresh playlist from server when song queued
+    // Backbone.Events.on('song:queue', function(song) {
+    //   console.log('Queue song', song);
+    // });
   },
   render: function() {
     this.$el.empty();
@@ -52,7 +76,7 @@ var PlaylistView = Backbone.View.extend({
 var SearchView = Backbone.View.extend({
   events: {
     'input #search-field': 'onInput',
-    'click .add': 'onSongAdd',
+    'click .add': 'onAddToPLaylist',
     'click .search-in': 'onPlaceChange'
   },
   initialize: function() {
@@ -91,10 +115,12 @@ var SearchView = Backbone.View.extend({
     }, this);
     return this;
   },
-  onSongAdd: function(e) {
+  onAddToPLaylist: function(e) {
+    e.preventDefault();
     var id = $(e.target).attr('data-id');
     var song = this.collection.get(id);
-    Backbone.Events.trigger('song:play', song);
+    song.queue();
+    Backbone.Events.trigger('song:queue', song);
   }
 });
 
@@ -139,11 +165,6 @@ $(document).ready(function() {
   var playlistView = new PlaylistView({
     el: '#playlist',
     collection: playlist
-  });
-
-
-  Backbone.Events.on('song:queue', function(song) {
-    console.log('Queue song', song.name);
   });
 
   var songs = new SongCollection();

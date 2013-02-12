@@ -89,27 +89,22 @@ $app->match('/songs', function (Request $request) use ($app) {
 
 //This Part of the contoller is used to insert an item in the PlayList
 $app->get('/insert/{id}', function ($id) use ($app) {
-
-    $item = new \RH\Model\PlayItem();
-
-
-    //TODO : Time is only a temporary solution. This will have to change.
-    $item->setOrder(time());
-
-    $song = RH\Model\SongQuery::create()->findPk($id);
+    $song = SongQuery::create()->findPk($id);
+    if (!$song) {
+        return new Response('{ "status": "error" }', 400);
+    }
     $song->setListenCount($song->getListenCount()+1);
     $song->save();  //<= Ne fonctionne pas
 
+    $item = new PlayItem();
+    //TODO : Time is only a temporary solution. This will have to change.
+    $item->setOrder(time());
     $item->setSong($song);
     $item->save();
 
-    
-    //$app['session']->setFlash('successAdd','Your song <strong>' . $song->getName() . '</strong> has been added at the radio playlist! Enjoy :-) !');
-
-
-    //return $app->redirect($app['url_generator']->generate('search'));
-    return $app->redirect($app->path('homepage'));
+    return new Response('{ "status": "success" }', 201);
 })
+->method('POST')
 ->bind('insert')
 ;
 
