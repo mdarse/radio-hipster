@@ -39,9 +39,11 @@ var Playlist = Backbone.Collection.extend({
 var Song = Backbone.Model.extend({
   queue: function() {
     var success = function(resp) {
+      console.log('Queued');
       this.trigger('queued', this, resp, options);
     };
     var error = function(xhr) {
+      console.log('Error');
       this.trigger('error', this, xhr, options);
     };
     var options = {
@@ -60,6 +62,7 @@ var SongCollection = Backbone.Collection.extend({
   model: Song,
   url: '/index.php/songs',
   query: function(search) {
+    console.log("Quering", search);
     this.fetch({
       data: search
     });
@@ -104,11 +107,13 @@ var SearchView = Backbone.View.extend({
   },
   onInput: function(e) {
     this.search = $(e.target).val();
+    console.log('Searching', this.searchIn);
     this.regexp = new RegExp(RegExp.escape(this.search), 'gi');
     this.refresh();
   },
   onPlaceChange: function(e) {
     this.searchIn = $(e.target).attr('data-search-in');
+    console.log('Selected', this.searchIn);
     this.refresh();
   },
   refresh: function() {
@@ -125,6 +130,7 @@ var SearchView = Backbone.View.extend({
   },
   render: function() {
     this.searchResults.empty();
+    console.log('Rendering', this.collection.toJSON());
     this.collection.each(function(item) {
       var context = _.extend(item.toJSON(), { hightlight: this.hightlight });
       this.searchResults.append(this.template(context));
@@ -151,6 +157,7 @@ var PlayerView = Backbone.View.extend({
     }, this);
   },
   onTrackEnded: function() {
+    console.log('Track ended', this);
     Backbone.Events.trigger('player:ended', this);
   },
   onLoadError: function() {
@@ -158,6 +165,7 @@ var PlayerView = Backbone.View.extend({
   },
   loadSong: function(song, play) {
     var url = song.get('song_media_url');
+    console.log('Loading', song.get('song_name'), url);
     this.player.load(url);
     if (play) this.player.play();
   },
