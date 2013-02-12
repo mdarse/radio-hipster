@@ -23,7 +23,7 @@ $console->register( 'shift' )
       $contenu_array = file('timeDir/time');
         
         if (!$fp = fopen("timeDir/time","w+")) {
-            print('Probleme');
+            throw new Exception();
             exit;
         }
         
@@ -44,20 +44,15 @@ $console->register( 'shift' )
             }
             else
             {
-                print('On change');
                 RH\Playlist::shift();
                 $song = \RH\Playlist::getSong();
                 if($song == null)
-                {
-                    print('fin');
                     exit;
-                }
                 fputs($fp, time() . '/' . $song->getTime());
             }
         }
         else
         {
-            print('On met');
             $song = \RH\Playlist::getSong();
             fputs($fp, time() . '/' . $song->getTime());
         }
