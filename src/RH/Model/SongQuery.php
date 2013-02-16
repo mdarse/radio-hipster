@@ -20,11 +20,6 @@ use RH\Model\ArtistQuery;
  */
 class SongQuery extends BaseSongQuery
 {
-    public function filterByPattern($pattern)
-    {
-        return $this->filterByName('%' . $pattern . '%');
-    }
-
     public function findByPatternInLocations($pattern, $locations)
     {
         $songs = in_array('song', $locations)
@@ -37,7 +32,6 @@ class SongQuery extends BaseSongQuery
             ? SongQuery::create()->findByAlbumNamePattern($pattern)
             : array();
 
-        return $songs;
         return array_merge($songs, $artistSongs, $albumSongs);
     }
     
@@ -60,24 +54,33 @@ class SongQuery extends BaseSongQuery
         
         $songsOnAlbum = array();
         foreach ($albums as $album) {
-            $songsOnAlbum[] = $this->filterByAlbum($album)->find();
+            foreach ($this->filterByAlbum($album)->find()->getArrayCopy() as $song) {
+                $songsOnAlbum[] = $song;
+            }
         }
         
         return $songsOnAlbum;
     
     }
     
-        public function findByArtistNamePattern($pattern)
+    public function findByArtistNamePattern($pattern)
     {
         $albums = ArtistQuery::create()
                 ->findByPattern($pattern);
         
         $songsOnAlbum = array();
         foreach ($albums as $album) {
-            $songsOnAlbum[] = $this->filterByArtist($album)->find();
+            foreach ($this->filterByArtist($album)->find()->getArrayCopy() as $song) {
+                $songsOnAlbum[] = $song;
+            }
         }
         
         return $songsOnAlbum;
     
+    }
+
+    public function filterByPattern($pattern)
+    {
+        return $this->filterByName('%' . $pattern . '%');
     }
 }
