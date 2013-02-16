@@ -9,6 +9,29 @@
     padding: 10px;
     background-color: gainsboro;
 }
+.main-content {
+    padding: 20px;
+}
+
+#audiojs_wrapper0 {
+    margin-top: 10px;
+}
+
+.title {
+    font-size: 4em;
+    font-weight: lighter;
+    line-height: 1;
+    text-indent: 0.1em;
+    text-transform: uppercase;
+}
+.title.sub {
+    font-size: 2em;
+    font-weight: 100;
+    letter-spacing: 4px;
+}
+.title.sub.center {
+    text-align: center;
+}
 
 .search-form {
     text-align: center;
@@ -54,4 +77,17 @@
     position: absolute;
     top: 14px;
     right: 10px;
+}
+
+.top-songs {
+    list-style-type: square;
+}
+
+.playlist li {
+    list-style-type: none;
+    font-style: italic;
+    text-transform: uppercase;
+    line-height: 1.8;
+    font-weight: lighter;
+    /*font-size: 1.2em;*/
 }
