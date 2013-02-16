@@ -13,7 +13,7 @@ var Playlist = Backbone.Collection.extend({
       this.currentItem = this.first();
     }, this);
     _.bindAll(this, 'executePolling', 'onFetch');
-    Backbone.Events.on('song:queue', this.executePolling);
+    Backbone.Events.on('song:queue', this.executeSinglePolling, this);
   },
   next: function() {
     var index = this.indexOf(this.currentItem);
@@ -26,8 +26,13 @@ var Playlist = Backbone.Collection.extend({
   stopPolling: function() {
     this.polling = false;
   },
-  executePolling: function() {
-    this.fetch({ update: true, success: this.onFetch });
+  executeSinglePolling: function() {
+    this.executePolling(true);
+  },
+  executePolling: function(once) {
+    var options = { update: true };
+    if (!once) options.success = this.onFetch;
+    this.fetch(options);
   },
   onFetch: function() {
     if (this.polling) {
