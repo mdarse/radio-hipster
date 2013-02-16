@@ -50,9 +50,11 @@ $app->match('/upload', function (Request $request) use ($app) {
         $song->save();
         $song->extractID3();
 
-        return $app->json($song->toArray());
+        // return $app->json($song->toArray());
 
         // $app['session']->getFlashBag()->add('success','Your song has been uploaded');
+        return $app->redirect($app->path('homepage'));
+
         return new Response('{ "status": "success" }', 201);
     }
     return new Response('{ "status": "error" }', 400);
