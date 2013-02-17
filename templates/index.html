@@ -12,7 +12,7 @@
 
 {% block content %}
 <div class="row-fluid">
-    <div class="span12 span">
+    <div class="span12 span header">
         <div class="title span6">Radio Hipster</div>
         <audio id="player"></audio>
     </div>
@@ -52,12 +52,12 @@
             <a href="#uploadModal" role="button" class="btn btn-large" data-toggle="modal">Upload a song</a>
             {{ include('uploadForm.twig', { form: upload_form }) }}
         </section>
-        <aside>
+        <aside class="top-wrapper">
             {{ include('top.html.twig') }}
         </aside>
     </section>
-    <aside class="span4 span">
-        <h1 class="sub title center">Playlist</h1>
+    <aside class="span4 span playlist-wrapper">
+        <h1 class="sub title">Playlist</h1>
         <ol id="playlist" class="playlist"></ol>
     </aside>
 </div>

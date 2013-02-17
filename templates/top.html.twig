@@ -3,9 +3,9 @@
 <ul class="top-songs">
     {% for song in top_songs %}
         <li>
-            <strong>{{ song.name }}</strong>
-            by {{ song.artist.name|default('Unknow Artist') }}
-            in {{ song.album.name |default('Unknow Album') }}
+            <span class="title">{{ song.name }}</span>
+            by <span class="artist">{{ song.artist.name|default('Unknow Artist') }}</span>
+            in <span class="album">{{ song.album.name |default('Unknow Album') }}</span>
         </li>
     {% endfor %}
 </ul>

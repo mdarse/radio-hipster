@@ -7,10 +7,13 @@
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 10px;
-    background-color: gainsboro;
+}
+.span.header {
+    border-bottom: 1px solid black;
+    padding-bottom: 20px;
 }
 .main-content {
-    padding: 20px;
+    padding: 10px 20px;
 }
 
 #audiojs_wrapper0 {
@@ -37,7 +40,7 @@
     font-weight: bold;
 }
 .search-results {
-    margin: 10px 0;
+    margin: 10px 0 30px 0;
 }
 .song-row {
     position: relative;
@@ -76,15 +79,25 @@
     right: 10px;
 }
 
+.top-wrapper {
+    margin-top: 30px;
+}
 .top-songs {
     list-style-type: square;
 }
+.top-songs .title {
+    font-size: 1em;
+    line-height: 0.8;
+    font-weight: 200;
+}
 
-.playlist li {
-    list-style-type: none;
-    font-style: italic;
-    text-transform: uppercase;
+.playlist-wrapper ol {
+    margin-left: 5px;
+}
+.playlist-wrapper li {
     line-height: 1.8;
+    font-style: italic;
     font-weight: lighter;
-    /*font-size: 1.2em;*/
+    text-transform: uppercase;
+    list-style-type: none;
 }
