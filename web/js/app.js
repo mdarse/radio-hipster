@@ -4,7 +4,7 @@ RegExp.escape = function(s) {
 };
 
 var Playlist = Backbone.Collection.extend({
-  url: '/index.php/playlist',
+  url: '/playlist',
   comparator: 'order',
   polling: false,
   pollingInterval: 10,
@@ -54,7 +54,7 @@ var Song = Backbone.Model.extend({
     var options = {
       type: 'POST',
       dataType: 'json',
-      url: '/index.php/insert/' + this.id,
+      url: '/insert/' + this.id,
       context: this,
       success: success,
       error: error
@@ -65,7 +65,7 @@ var Song = Backbone.Model.extend({
 
 var SongCollection = Backbone.Collection.extend({
   model: Song,
-  url: '/index.php/songs',
+  url: '/songs',
   query: function(search) {
     console.log("Quering", search);
     this.fetch({
